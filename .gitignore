@@ -1,0 +1,7 @@
+# Only the clickable prototype is published; everything else in this folder stays local.
+/*
+!/.gitignore
+!/index.html
+!/prototype/
+/prototype/*
+!/prototype/line-cesis2.html
