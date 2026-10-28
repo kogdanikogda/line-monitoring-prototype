@@ -295,6 +295,8 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
   .kpis{grid-template-columns:1fr 1fr}.two,.tp{grid-template-columns:1fr}
   .chg-row{grid-template-columns:160px minmax(0,1fr) 128px;gap:var(--s3)}
   .tr{grid-template-columns:112px 192px minmax(0,1fr) 72px}.tr .c{display:none}
+  .opwrap .opgrid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr) auto}
+  .opwrap .og-tpl .card{height:auto}
   .reasons{grid-template-columns:repeat(4,1fr)}
 }
 @container app (max-width:599px){
@@ -431,7 +433,47 @@ body.dev .opwrap{min-height:100%}
 .pr-bar{position:relative;height:var(--s2);border-radius:var(--s1);background:var(--soft);margin-top:var(--s5)}
 .pr-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:var(--s1);background:var(--tx)}
 .pr-bar em{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--mu)}
-.pr-bar em span{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);white-space:nowrap;font:var(--t-cap) var(--ff);font-style:normal;color:var(--mu)}
+.pr-bar em span{position:absolute;bottom:calc(100% + 4px);right:0;white-space:nowrap;font:var(--t-cap) var(--ff);font-style:normal;color:var(--mu)}
+/* operator screen without scrolling: header + 2x3 dashboard grid that fills the screen */
+.opwrap{position:relative}
+body.dev .opwrap.kiosk-fit{height:100%}
+.opgrid{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);gap:var(--s3);padding:0 var(--s4) var(--s4);max-width:1152px;width:100%;margin:0 auto}
+.opgrid>*{min-width:0;min-height:0;margin:0}
+.opgrid .card{margin:0;padding:var(--s3) var(--s4)}
+.og-tl{grid-column:1/-1}
+.opgrid .status{margin:0;padding:var(--s4)}
+.opgrid .status .big{font:800 var(--t-d2) var(--ff)}
+.opgrid .status .for{font:var(--t-lg) var(--ff)}
+.og-prog .pr-num{font:800 var(--t-d1) var(--ff)}
+.og-prog .pr-side{gap:var(--s4);margin-top:var(--s2)}
+.og-prog .pr-bar{margin-top:var(--s4)}
+.opgrid .ch{margin-bottom:var(--s2)}
+.opgrid .ch h2{font:700 var(--t-lg) var(--ff)}
+.opgrid .ch .sub:empty{display:none}
+.opgrid .tl{height:var(--s6)}
+.opgrid .tpl{height:var(--s4);margin-top:var(--s1)}
+.opgrid .axis{margin-top:var(--s1)}
+.opgrid .readout{min-height:40px;margin-top:var(--s2);padding:var(--s1) var(--s3);font:var(--t-sm) var(--ff)}
+.opgrid .legend{margin-top:var(--s2);gap:var(--s1) var(--s3);font:var(--t-cap) var(--ff)}
+.og-unt{overflow:hidden}
+.og-unt .unt-row{padding:var(--s2) 0;font:var(--t-body) var(--ff)}
+.og-tpl [data-tour=templates] .ch .sub{display:none}
+.og-tpl .card{height:100%}
+.og-tpl .grid.tp{grid-template-columns:1fr 1fr;gap:var(--s2)}
+.og-tpl .tplc{padding:var(--s2) var(--s3);gap:var(--s2);align-items:flex-start}
+.og-tpl .tbadge{width:40px;height:40px;font:800 var(--t-sm) var(--ff)}
+.og-tpl .tplc .n{font:800 var(--t-h3) var(--ff)}
+.og-tpl .tplc .l{font:var(--t-cap) var(--ff)}
+.og-tpl .tname{display:none}
+.osheet{position:absolute;inset:0;z-index:20;background:rgba(18,21,25,.6);display:flex;align-items:center;justify-content:center;padding:var(--s4)}
+.opanel{width:min(1040px,100%);background:var(--warn-bg);color:var(--warn-tx);border-radius:var(--r3);padding:var(--s4) var(--s5);box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.opanel .ctx{font:var(--t-lg) var(--ff)}
+.opanel h2{font:800 var(--t-h2) var(--ff);margin-bottom:var(--s3)}
+.opanel .rbtn{min-height:80px}
+/* operator panel shows no device chrome: no status bar, home indicator or camera */
+body.kiosk .sbar,body.kiosk .homeind,body.kiosk .cam{display:none}
+body.kiosk #app{top:0}
+body.kiosk{--safe-b:0px}
 /* toast */
 #toast{position:fixed;left:50%;bottom:var(--s4);transform:translateX(-50%);background:#121519;color:#fff;border-radius:var(--r2);padding:var(--s2) var(--s3);min-height:var(--tap);display:flex;align-items:center;font:var(--t-sm) var(--ff);z-index:120;box-shadow:0 8px 32px rgba(0,0,0,.25);max-width:calc(100vw - 32px)}
 /* guided tour */
@@ -836,25 +878,28 @@ function viewOperator(M){
     else h+='<div class="a-act"><button class="btn a-pri" data-master="'+c[0]+'">'+(called[c[0]]?'Мастер вызван · '+called[c[0]]:'Вызвать мастера')+'</button><button class="btn a-sec" data-later="'+c[0]+'">Свернуть</button></div>';
     return h+'</section></div>';
   }
-  var h='<div class="opwrap">'+opHeader(M)+'<div class="op">'+stale();
-  h+='<section class="status'+(scen=="nolink"?' old':'')+'" data-tour="status" style="background:'+cv(st.c)+';color:'+fg+'"><div>'+(scen=="nolink"?'<div class="lbl">Последнее известное состояние</div>':'')+'<div class="big">'+st.big+'</div>'+
+  // a fixed screen with no scrolling: everything fits one view (dashboard grid, bottom row stretches)
+  var stl=scen=="nolink"?'<div class="lbl">Последнее известное состояние · нет свежих данных 6 мин</div>':'';
+  var h='<div class="opwrap kiosk-fit">'+opHeader(M)+'<div class="opgrid">';
+  h+='<section class="status og-status'+(scen=="nolink"?' old':'')+'" data-tour="status" style="background:'+cv(st.c)+';color:'+fg+'"><div>'+stl+'<div class="big">'+st.big+'</div>'+
      '<div class="for">'+(k==1?'уже '+dur(M.curDur)+' · шаблон '+tplLabel("27"):dur(M.curDur)+' · '+(k==2?(tag?'причина: '+tag:'причина не указана'):why[k]))+'</div></div>'+
      (k!=1&&scen!="nolink"?'<button class="btn a-sec" data-unfold="1">Развернуть</button>':'')+'</section>';
-  if(k==2&&!tag)h+='<section class="card ask mb"><h2>Почему остановилась Цесис 2?</h2>'+reasonBtns(c[0])+'</section>';
-  // earlier stops still without a reason — the operator can close them too
-  var past=M.untagged.filter(function(x){return x[0]!=c[0]});
-  if(past.length){
-    h+='<section class="card mb" data-tour="unt"><div class="ch"><h2>Остановки без причины: '+past.length+'</h2><div class="sub">Укажите, почему стояли — эти минуты попадут в отчёт начальника участка.</div></div>';
-    past.forEach(function(x){
-      h+='<div class="unt-row"><span class="tm">'+hm(x[0])+'–'+hm(x[1])+'</span><b>Стоп · '+(x[1]-x[0])+' мин</b><button class="btn" data-open="'+x[0]+'">'+(openTag===x[0]?'Свернуть':'Указать причину')+'</button>'+(openTag===x[0]?reasonBtns(x[0],true):'')+'</div>';
-    });
-    h+='</section>';
-  }
-  h+='<section class="card mb" data-tour="prog"><div class="pr-row"><div><div class="pr-num">'+M.done+' <small>карт</small></div><div class="sub">сделано за смену</div></div>'+
-     '<dl class="pr-side"><div><dt>По графику к 19:40</dt><dd>'+M.planNow+'</dd></div><div><dt>Темп</dt><dd>'+M.perHour.toFixed(0)+' карт/ч</dd></div><div><dt>План на смену</dt><dd>'+PLAN+'</dd></div></dl></div>'+
+  h+='<section class="card og-prog" data-tour="prog"><div class="pr-num">'+M.done+' <small>карт</small></div><div class="sub">сделано за смену</div>'+
+     '<dl class="pr-side"><div><dt>По графику к 19:40</dt><dd>'+M.planNow+'</dd></div><div><dt>Темп</dt><dd>'+M.perHour.toFixed(0)+' карт/ч</dd></div><div><dt>План</dt><dd>'+PLAN+'</dd></div></dl>'+
      '<div class="pr-bar"><i style="width:'+M.done/PLAN*100+'%"></i><em style="left:'+M.planNow/PLAN*100+'%"><span>по графику</span></em></div></section>';
-  return h+timeline(M,"Смена","Цвет — что делала линия.")+templates(M)+
-    '<div class="foot">Данные демонстрационные: сценарий смены собран по ТЗ и карте сигналов линии.</div></div></div>';
+  h+='<div class="og-tl">'+timeline(M,"Смена","")+'</div>';
+  // earlier stops still without a reason — the operator can close them too; the reasons open over the screen
+  var past=M.untagged.filter(function(x){return x[0]!=c[0]});
+  h+='<section class="card og-unt" data-tour="unt"><div class="ch"><h2>Остановки без причины'+(past.length?': '+past.length:'')+'</h2></div>'+
+     (past.length?past.map(function(x){return '<div class="unt-row"><span class="tm">'+hm(x[0])+'–'+hm(x[1])+'</span><b>Стоп · '+(x[1]-x[0])+' мин</b><button class="btn" data-open="'+x[0]+'">Указать причину</button></div>'}).join("")
+       :'<div class="sub">Все остановки за смену с причиной.</div>')+'</section>';
+  h+='<div class="og-tpl">'+templates(M)+'</div></div>';
+  if(openTag!=null){
+    var o=M.seg.filter(function(x){return x[0]===openTag})[0];
+    if(o)h+='<div class="osheet" role="dialog" aria-modal="true" aria-labelledby="osq"><div class="opanel"><div class="ctx">Стоп '+hm(o[0])+'–'+hm(o[1])+' · '+(o[1]-o[0])+' мин</div>'+
+      '<h2 id="osq">Почему стояли?</h2>'+reasonBtns(o[0])+'<div class="a-act"><button class="btn lt" data-open="'+o[0]+'">Отмена</button></div></div></div>';
+  }
+  return h+'</div>';
 }
 function viewForeman(M){
   return shell(nowCard(M)+timeline(M,"Как прошла смена","Каждый цвет — состояние линии. Нажмите на участок, чтобы увидеть время и причину.")+templates(M)+
@@ -1026,6 +1071,7 @@ function frame(){
   b.style.setProperty("--barh",document.querySelector(".demo-bar").offsetHeight+"px");
   b.classList.toggle("dev",dev);b.classList.toggle("phone",dev&&screen=="phone");b.classList.toggle("tab",dev&&screen=="tab");
   b.classList.toggle("land",tabRot=="land");b.classList.toggle("port",tabRot=="port");
+  b.classList.toggle("kiosk",dev&&role=="op");
   var box=$("devbox"),d=$("dev");
   if(!dev){box.style.width=box.style.height="";d.style.transform="";$("sbar").innerHTML="";return}
   $("sbar").innerHTML=screen=="phone"?'<span>19:40</span><span class="ics">'+SIG+WIFI+BATT+'</span>'
