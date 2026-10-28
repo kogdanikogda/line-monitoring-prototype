@@ -210,6 +210,7 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 
 /* round 3: tap instead of hover, operator list, templates, tour, help */
 .op{max-width:960px}
+.main .op{padding:0;margin:0}
 .status>div{min-width:0}
 .status .big{overflow-wrap:anywhere}
 .tl .seg{cursor:pointer}
@@ -634,18 +635,18 @@ function shell(content){
     '<main class="main"><div class="top"><button class="ibtn mbtn" data-menu="open" data-tour="side" aria-label="Меню">'+ic("menu")+'</button><div class="search">'+ic("search")+'Поиск станка или события</div><span class="sp"></span>'+
     '<span class="ibtn">'+ic("bell")+(M_.untagged.length?'<span class="ndot"></span>':'')+'</span><span class="ava" title="'+r[1]+'">'+r[2]+'</span></div>'+
     '<div class="ph"><h1>Линия Цесис 2</h1><div class="meta">'+
-    statusPill(M_)+'<span class="pill">Смена <b>08:00–20:00</b></span></div></div>'+
+    (role=="op"?'':statusPill(M_))+'<span class="pill">Смена <b>08:00–20:00</b></span></div></div>'+
     stale()+content+'<div class="foot">Данные демонстрационные: сценарий смены собран по ТЗ и карте сигналов линии. В рабочей версии данные приходят с ПЛК линии через сборщик данных.</div></main></div>';
 }
 
 // ---- views ----
 function viewOperator(M){
   var c=M.cur,col=(c[2]==3||c[2]==8||c[2]==0)?"#121519":"#fff",tag=tags[c[0]];
-  var h='<div class="op"><div class="top"><h1>Линия Цесис 2</h1><span class="sp hm"></span><span class="pill">Смена <b>08:00–20:00</b></span><span class="pill"><b>19:40</b></span><span class="ava hm">ОП</span></div>';
-  h+=stale()+'<section class="status'+(scen=="nolink"?' old':'')+'" data-tour="status" style="background:'+cv(ST[c[2]].c)+';color:'+col+'"><span class="ring">'+ic(c[2]==1?"play":"stop")+'</span><div><div class="lbl">'+(scen=="nolink"?"Последнее известное состояние":"Линия сейчас")+'</div><div class="big">'+ST[c[2]].big+'</div>'+
+  var h='<div class="op">';
+  h+='<section class="status'+(scen=="nolink"?' old':'')+'" data-tour="status" style="background:'+cv(ST[c[2]].c)+';color:'+col+'"><span class="ring">'+ic(c[2]==1?"play":"stop")+'</span><div><div class="lbl">'+(scen=="nolink"?"Последнее известное состояние":"Линия сейчас")+'</div><div class="big">'+ST[c[2]].big+'</div>'+
      '<div class="for">'+(c[2]==1?'уже '+dur(M.curDur)+' · шаблон №27':dur(M.curDur)+' · '+(c[2]==2?(tag?'причина: '+tag:'причина не указана'):why[c[2]]))+'</div></div></section>';
   if(c[2]==2){
-    if(!tag)h+='<section class="card ask mb" data-tour="reasons"><h2>Почему остановили?</h2>'+reasonBtns(c[0])+'</section>';
+    if(!tag)h+='<section class="card ask mb" data-tour="reasons"><h2>Почему остановилась Цесис 2?</h2>'+reasonBtns(c[0])+'</section>';
     else h+='<section class="card mb"><div class="done-r"><span class="ic" style="--c:var(--ok)">'+ic("check")+'</span><span>Записано: '+tag+'</span><button class="btn lt" data-untag="'+c[0]+'">Изменить</button></div></section>';
   }
   // earlier stops still without a reason — the operator can close them too
@@ -660,7 +661,7 @@ function viewOperator(M){
   h+='<section class="card mb" data-tour="prog"><div class="ch"><span class="ic" style="--c:var(--ok)">'+ic("box")+'</span><h2>Сделано за смену</h2></div><div class="prog"><span class="num">'+M.done+'</span><span class="of">карт</span></div>'+
      '<div class="prog-t"><i style="width:'+M.done/PLAN*100+'%"></i><em style="left:'+M.planNow/PLAN*100+'%"></em></div>'+
      '<div class="prog-line">По графику к 19:40 — '+M.planNow+', за смену — '+PLAN+'.'+TBD+'</div></section>';
-  return h+timeline(M,"Смена","Цвет — что делала линия.")+templates(M)+'</div>';
+  return shell(h+timeline(M,"Смена","Цвет — что делала линия.")+templates(M)+'</div>');
 }
 function viewForeman(M){
   return shell(nowCard(M)+timeline(M,"Как прошла смена","Каждый цвет — состояние линии. Нажмите на участок, чтобы увидеть время и причину.")+templates(M)+
@@ -676,7 +677,7 @@ function helpHTML(){
   var lg=ORDER.map(function(k){return '<i style="background:'+cv(ST[k].c)+'"></i><div><b>'+ST[k].n+'</b> — '+ST[k].d+'</div>'}).join("");
   return '<div class="bk" data-help="1"></div><div class="pnl"><div class="hd"><h2>Пояснения к прототипу</h2><button class="btn lt" data-help="1">Закрыть</button></div>'+
   '<p>Экран смены одной линии — «Линия Цесис 2», сварка арматурных сеток. Единица выпуска — карта. Интерфейс общий для любого завода, термины линии настраиваются.</p>'+
-  '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки.</li>'+
+  '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки. Линию выбирает в меню, как и остальные роли; название линии повторяется в вопросе о причине, чтобы не перепутать.</li>'+
   '<li><b>Начальник участка</b> — что требует действия сейчас: остановки без причины, переналадки сверх нормы, журнал событий.</li>'+
   '<li><b>Директор / собственник</b> — итог смены, куда ушло время, выпуск по шаблонам.</li></ul>'+
   '<p>Переключатель «Экран» показывает каждую роль на большом экране и на телефоне. На телефоне навигация по цеху открывается кнопкой ☰.</p>'+
@@ -699,6 +700,7 @@ function helpHTML(){
 var TOURS={
   op:[
     ["demo","Это прототип на демо-данных","Здесь переключаются роль, размер экрана (большой или телефон) и состояние линии. Цифры вымышлены."],
+    ["side","Выбор линии","Слева — участки, линии и станки со статусами. Выделенная строка — линия, с которой вы работаете. На телефоне меню открывается кнопкой ☰."],
     ["status","Состояние линии","Видно издалека: цвет и одно слово. Ниже — сколько длится и какой шаблон в работе."],
     ["reasons","Линия встала — укажите причину","Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
     ["unt","Прошлые остановки без причины","Если причину не указали сразу, она ждёт здесь. Минуты сразу попадают в отчёт начальника участка."],
