@@ -169,6 +169,7 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 .op{max-width:1100px;margin:0 auto;padding:16px 16px 40px}
 .op .top{padding-bottom:16px}
 .op .top h1{font-size:28px;margin:0;font-weight:800}
+.status.old{opacity:.55;filter:grayscale(.4)}
 .status{border-radius:24px;padding:28px 32px;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:24px}
 .status .lbl{font-size:18px;opacity:.9}
 .status .big{font-size:68px;font-weight:800;line-height:1.05;letter-spacing:-.01em}
@@ -330,7 +331,7 @@ function rateAt(m){return m<185?R12:R27}
 function tplAt(m){return m<185?"12":"27"}
 
 var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Директор / собственник","ДР","Директор"]];
-var SCENS=[["run","Работает"],["stop","Станок стоит"]];
+var SCENS=[["run","Работает"],["stop","Станок стоит"],["nolink","Нет связи"]];
 var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null;
 if(!ROLES.some(function(r){return r[0]==role}))role="foreman";
 
@@ -415,6 +416,8 @@ function model(){
 
 // ---- blocks ----
 function lc(it){return it.st==2&&it.key!="s2"?it.label.toLowerCase():ST[it.st].lc}
+// shown only when data is stale: a calm timestamp would hide a frozen screen
+function stale(){return scen=="nolink"?'<section class="card alert mb" data-tour="stale"><span class="ic" style="--c:var(--pause)">'+ic("warn")+'</span><div><h2>Нет свежих данных 6 мин</h2><div class="s">Показано состояние на 19:34. Линия могла уже остановиться — проверьте на месте.</div></div></section>':""}
 function statusPill(M){
   var c=M.cur;
   return '<span class="pill"><i class="dot" style="background:'+cv(ST[c[2]].c)+'"></i><b>'+(c[2]==1?"Работает":ST[c[2]].n)+'</b> '+dur(M.curDur)+'</span>';
@@ -576,15 +579,15 @@ function shell(content){
     '<main class="main"><div class="top"><div class="search">'+ic("search")+'Поиск станка или события</div><span class="sp"></span>'+
     '<span class="ibtn">'+ic("bell")+(M_.untagged.length?'<span class="ndot"></span>':'')+'</span><span class="ava" title="'+r[1]+'">'+r[2]+'</span></div>'+
     '<div class="ph"><div><div class="crumbs">Линии и станки › Линия Цесис 2</div><h1>Линия Цесис 2</h1></div><div class="meta">'+
-    statusPill(M_)+'<span class="pill">Смена <b>08:00–20:00</b></span><span class="pill hm">Обновлено <b>19:40</b></span></div></div>'+
-    content+'<div class="foot">Данные демонстрационные: сценарий смены собран по ТЗ и карте сигналов линии. В рабочей версии данные приходят с ПЛК линии через сборщик данных.</div></main></div>';
+    statusPill(M_)+'<span class="pill">Смена <b>08:00–20:00</b></span></div></div>'+
+    stale()+content+'<div class="foot">Данные демонстрационные: сценарий смены собран по ТЗ и карте сигналов линии. В рабочей версии данные приходят с ПЛК линии через сборщик данных.</div></main></div>';
 }
 
 // ---- views ----
 function viewOperator(M){
   var c=M.cur,col=(c[2]==3||c[2]==8||c[2]==0)?"#121519":"#fff",tag=tags[c[0]];
   var h='<div class="op"><div class="top"><h1>Линия Цесис 2</h1><span class="sp hm"></span><span class="pill">Смена <b>08:00–20:00</b></span><span class="pill"><b>19:40</b></span><span class="ava hm">ОП</span></div>';
-  h+='<section class="status" data-tour="status" style="background:'+cv(ST[c[2]].c)+';color:'+col+'"><span class="ring">'+ic(c[2]==1?"play":"stop")+'</span><div><div class="lbl">Линия сейчас</div><div class="big">'+ST[c[2]].big+'</div>'+
+  h+=stale()+'<section class="status'+(scen=="nolink"?' old':'')+'" data-tour="status" style="background:'+cv(ST[c[2]].c)+';color:'+col+'"><span class="ring">'+ic(c[2]==1?"play":"stop")+'</span><div><div class="lbl">'+(scen=="nolink"?"Последнее известное состояние":"Линия сейчас")+'</div><div class="big">'+ST[c[2]].big+'</div>'+
      '<div class="for">'+(c[2]==1?'уже '+dur(M.curDur)+' · шаблон №27':dur(M.curDur)+' · '+(c[2]==2?(tag?'причина: '+tag:'причина не указана'):why[c[2]]))+'</div></div></section>';
   if(c[2]==2){
     if(!tag)h+='<section class="card ask mb" data-tour="reasons"><h2>Почему остановили?</h2>'+reasonBtns(c[0])+'</section>';
@@ -621,7 +624,7 @@ function helpHTML(){
   '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки.</li>'+
   '<li><b>Начальник участка</b> — что требует действия сейчас: остановки без причины, переналадки сверх нормы, журнал событий.</li>'+
   '<li><b>Директор / собственник</b> — итог смены, куда ушло время, выпуск по шаблонам.</li></ul>'+
-  '<p>Переключатель «Линия сейчас» в верхней полосе показывает, как экран выглядит, когда линия стоит.</p>'+
+  '<p>Переключатель «Линия сейчас» в верхней полосе показывает, как экран выглядит, когда линия стоит и когда пропала связь. Время обновления видно только при устаревших данных.</p>'+
   '<h3>Цвета состояний</h3><div class="lg">'+lg+'</div>'+
   '<h3>Метки</h3><ul><li><span class="src">ПЛК</span> — состояние и причину определил контроллер линии автоматически.</li>'+
   '<li><span class="src opr">Оператор</span> — причину указал человек.</li>'+
