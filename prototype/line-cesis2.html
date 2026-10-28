@@ -314,6 +314,7 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
   .tl{height:var(--s7)}.tpl .seg{font:600 var(--t-cap) var(--ff)}
   .unt-row .btn{margin-left:0;width:100%}
   .tplc .n{font:800 var(--t-h3) var(--ff)}
+  .prompt{padding:var(--s3)}.pbox{padding:var(--s4)}.pbox h2{font:800 var(--t-h3) var(--ff)}.pbox .rbtn{min-height:var(--s9);font:700 var(--t-body) var(--ff)}
 }
 
 /* =====================================================================
@@ -375,24 +376,27 @@ body.tab.land #dev{width:1220px;height:860px}
 body.tab.land .screen{width:1180px;height:820px}
 body.tab.port #dev{width:860px;height:1220px}
 body.tab.port .screen{width:820px;height:1180px}
-/* stop reminder: a system-style notification for the operator (iOS banner in device frames, corner card on desktop) */
-#notif{display:none;position:fixed;top:calc(var(--barh,56px) + var(--s3));right:var(--s4);width:min(400px,calc(100vw - 32px));z-index:85;gap:var(--s2);align-items:flex-start;padding:var(--s3);border-radius:var(--r3);background:rgba(250,251,251,.94);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);box-shadow:0 8px 32px rgba(16,24,40,.18),0 1px 2px rgba(16,24,40,.08);cursor:pointer;text-align:left}
-#notif.show{display:flex;animation:notif-in .32s cubic-bezier(.16,1,.3,1)}
-#notif .app{width:40px;height:40px;border-radius:10px;background:var(--ink);color:var(--ink-tx);display:grid;place-items:center;font:800 var(--t-body) var(--ff);flex:none}
-#notif .tx{flex:1;min-width:0}
-#notif .meta{display:flex;justify-content:space-between;gap:var(--s2);font:600 var(--t-cap) var(--ff);color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
-#notif .meta span:last-child{text-transform:none;letter-spacing:0;font-weight:500}
-#notif b{display:block;font:700 var(--t-body) var(--ff);color:var(--tx);margin-top:2px}
-#notif p{margin:0;font:var(--t-sm) var(--ff);color:var(--mu)}
-#notif:focus-visible{outline:3px solid var(--blue-d);outline-offset:2px}
-body.dev #notif{position:absolute;right:auto}
-body.phone #notif{top:58px;left:var(--s2);width:calc(100% - var(--s3))}
-body.tab #notif{top:var(--s5);left:calc(50% - 200px);width:400px}
-@keyframes notif-in{from{transform:translateY(-16px);opacity:0}to{transform:none;opacity:1}}
-@media (prefers-reduced-motion:reduce){#notif.show{animation:none}}
 .ask.flash{animation:ask-flash 1.2s ease-out}
 @keyframes ask-flash{0%,40%{box-shadow:0 0 0 4px var(--pause)}100%{box-shadow:var(--shadow)}}
 @media (prefers-reduced-motion:reduce){.ask.flash{animation:none;box-shadow:0 0 0 4px var(--pause)}}
+/* full-screen reason prompt (operator screen at the machine): readable from a distance, one tap */
+.prompt{position:fixed;inset:var(--barh,56px) 0 0 0;z-index:70;background:rgba(18,21,25,.72);display:flex;align-items:center;justify-content:center;padding:var(--s4);animation:prompt-in .2s ease-out}
+body.dev .prompt{inset:0}
+.pbox{width:min(1104px,100%);max-height:100%;overflow:auto;background:var(--warn-bg);border-radius:var(--r3);padding:var(--s5);box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.pbox .pt{display:flex;gap:var(--s3);align-items:center;margin-bottom:var(--s4)}
+.pbox .pt .ic{background:var(--idle);color:#fff}
+.pbox .ctx{font:var(--t-lg) var(--ff);color:var(--warn-tx)}
+.pbox h2{font:800 var(--t-d1) var(--ff);color:var(--warn-tx)}
+.pbox .rbtn{min-height:96px;font:700 var(--t-ttl) var(--ff)}
+.pbox .later{display:flex;justify-content:flex-end;margin-top:var(--s4)}
+@keyframes prompt-in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.prompt{animation:none}}
+.nl.static{cursor:default}
+.tn{font:700 var(--t-body) var(--ff);color:var(--tx)}
+.tname{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-top:var(--s2)}
+.tin{min-height:var(--tap);flex:1;min-width:160px;border:0;box-shadow:inset 0 0 0 1px var(--line);border-radius:var(--rp);padding:0 var(--s3);font:var(--t-body) var(--ff);color:var(--tx);background:var(--card)}
+.tin:focus{outline:none;box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.sm{min-height:40px;padding:0 var(--s3);font:600 var(--t-sm) var(--ff)}
 /* toast */
 #toast{position:fixed;left:50%;bottom:var(--s4);transform:translateX(-50%);background:#121519;color:#fff;border-radius:var(--r2);padding:var(--s2) var(--s3);min-height:var(--tap);display:flex;align-items:center;font:var(--t-sm) var(--ff);z-index:120;box-shadow:0 8px 32px rgba(0,0,0,.25);max-width:calc(100vw - 32px)}
 /* guided tour */
@@ -427,7 +431,7 @@ body.tab #notif{top:var(--s5);left:calc(50% - 200px);width:400px}
   <div class="ctl"><span>Линия сейчас</span><div id="scens"></div></div>
   <div class="right"><button class="dbtn" data-tourstart="1">Тур по экрану</button><button class="dbtn" data-help="1" data-tour="help">Пояснения</button></div>
 </div>
-<div id="devbox"><div id="dev"><span class="cam"></span><div class="screen"><div class="sbar" id="sbar"></div><span class="island"></span><div id="app"></div><div id="notif" role="button" tabindex="0" data-notif="open" aria-live="polite"></div><span class="homeind"></span></div></div></div>
+<div id="devbox"><div id="dev"><span class="cam"></span><div class="screen"><div class="sbar" id="sbar"></div><span class="island"></span><div id="app"></div><span class="homeind"></span></div></div></div>
 <div id="help"></div>
 
 <script>
@@ -456,7 +460,7 @@ var R12=142/163, R27=318/434;           // cards per minute while the line runs
 function rateAt(m){return m<185?R12:R27}
 function tplAt(m){return m<185?"12":"27"}
 
-var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Директор / собственник","ДР","Директор"]];
+var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Начальник производства","НП","Производство"]];
 var SCENS=[["run","Работает"],["stop","Станок стоит"],["nolink","Нет связи"]];
 var SCREENS=[["phone","Телефон"],["tab","Планшет"],["desk","Десктоп"]];
 // shop structure for the sidebar: unit -> lines/machines; state uses ST codes, -1 = switched off. Only Cesis 2 opens.
@@ -465,7 +469,7 @@ var UNITS=[
   {id:"bend",n:"Гибочный участок",items:[["Гибочный ГС-1",6],["Гибочный ГС-2",-1]]}
 ];
 var WORD={1:"",2:"стоп",3:"простой",4:"наладка",5:"перегрев",6:"авария",7:"авар. стоп",8:"простой",0:"нет данных","-1":"выключен"};
-var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={},ptab="shift",compact=false,notifOn=false,notifFor=null;
+var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={},ptab="shift",compact=false,promptLater=null,tplNames={},editTpl=null;
 var tabRot="land";
 try{screen=localStorage.getItem("cesis2-screen")||"desk";tabRot=localStorage.getItem("cesis2-rot")||"land"}catch(x){}
 if(!SCREENS.some(function(x){return x[0]==screen}))screen=screen=="small"?"phone":"desk";
@@ -605,7 +609,7 @@ function timeline(M,title,subtitle){
   var h='<section class="card mb" data-tour="timeline"><div class="ch"><h2>'+title+'</h2><div class="r hm"><span class="ghost">08:00–20:00</span></div><div class="sub">'+subtitle+'</div></div><div class="tlwrap"><div class="tl">';
   M.seg.forEach(function(s,i){h+='<div class="seg'+(selSeg===i?' sel':'')+'" data-i="'+i+'" style="left:'+pct(s[0])+'%;width:'+pct(s[1]-s[0])+'%;background:'+cv(ST[s[2]].c)+'"></div>'});
   h+='</div><div class="tpl">';
-  TPLS.forEach(function(t){h+='<div class="seg" style="left:'+pct(t[0])+'%;width:'+pct(t[1]-t[0])+'%;background:'+cv(t[3])+'">'+t[2]+'</div>'});
+  TPLS.forEach(function(t){h+='<div class="seg" style="left:'+pct(t[0])+'%;width:'+pct(t[1]-t[0])+'%;background:'+cv(t[3])+'">'+(t[2]?tplLabel(t[2].slice(1)):"")+'</div>'});
   h+='</div><div class="axis">';
   for(var i=0;i<=12;i+=2)h+='<span class="'+(i%4?'odd':'')+'" style="left:'+pct(i*60)+'%">'+hm(i*60)+'</span>';
   h+='</div><div class="nowline" style="left:calc('+pct(NOW)+'% - 1px)"></div></div>'+
@@ -616,15 +620,23 @@ function timeline(M,title,subtitle){
 function readoutHTML(M){
   if(selSeg==null||!M.seg[selSeg])return "Нажмите на участок ленты — покажу время и причину.";
   var g=M.seg[selSeg],tag=g[2]==2?tags[g[0]]:null;
-  return "<b>"+hm(g[0])+"–"+hm(g[1])+"</b> · "+ST[g[2]].n+(tag?" — "+tag:why[g[2]]?" — "+why[g[2]]:"")+" · "+dur(g[1]-g[0])+(g[2]==1?" · шаблон №"+tplAt(g[0]):"");
+  return "<b>"+hm(g[0])+"–"+hm(g[1])+"</b> · "+ST[g[2]].n+(tag?" — "+tag:why[g[2]]?" — "+why[g[2]]:"")+" · "+dur(g[1]-g[0])+(g[2]==1?" · шаблон "+tplLabel(tplAt(g[0])):"");
 }
+function tplNameHTML(id){
+  var nm=tplNames[id];
+  if(role=="boss"&&editTpl===id)return '<div class="tname"><input class="tin" data-tid="'+id+'" value="'+(nm||"").replace(/"/g,"&quot;")+'" placeholder="Название шаблона" aria-label="Название шаблона №'+id+'"><button class="btn sm" data-tsave="'+id+'">Сохранить</button><button class="btn sm lt" data-tcancel="1">Отмена</button></div>';
+  if(nm)return '<div class="tname"><span class="tn">'+nm+'</span>'+(role=="boss"?'<button class="btn sm lt" data-tedit="'+id+'">Изменить</button>':'')+'</div>';
+  return '<div class="tname">'+(role=="boss"?'<button class="btn sm lt" data-tedit="'+id+'">Задать название</button>':'<span class="l">название задаёт начальник производства</span>')+'</div>';
+}
+function saveTpl(id){var i=document.querySelector('.tin[data-tid="'+id+'"]'),v=i?i.value.trim().slice(0,40):"";if(v)tplNames[id]=v;else delete tplNames[id];editTpl=null;render()}
+function tplLabel(id){return "№"+id+(tplNames[id]?" · "+tplNames[id]:"")}
 function templates(M){
   var rows=[["12","--tpl1"],["27","--tpl2"]].map(function(t){
     var o=M.tpl[t[0]],run=o.work+o.nd;
     return '<div class="tplc"><div class="tbadge" style="background:'+cv(t[1])+'">№'+t[0]+'</div><div>'+
       '<div class="n">'+o.n+' <small>карт</small></div>'+
       '<div class="l">в работе '+dur(o.work)+(o.nd?' + '+o.nd+' мин без связи':'')+' · '+Math.round(o.n/run*60)+' карт/час</div>'+
-      '<div class="l">название <span class="tbd">уточняется</span></div></div></div>';
+      tplNameHTML(t[0])+'</div></div>';
   }).join("");
   return '<section class="card mb" data-tour="templates"><div class="ch"><h2>Выпуск по шаблонам</h2><div class="sub">Какой шаблон работал и сколько карт на нём сделано. Карты за минуты без связи досчитаны по счётчику ПЛК.</div></div><div class="grid tp" style="margin:0">'+rows+'</div></section>';
 }
@@ -709,8 +721,13 @@ function changeovers(M){
 }
 
 // ---- shell ----
+function curLine(){var k=M_.cur[2];return '<div class="nl on static"><i class="dot" style="background:'+cv(ST[k].c)+'"></i><span class="nm">Линия Цесис 2</span>'+(WORD[k]?'<span class="sw">'+WORD[k]+'</span>':'')+'</div>'}
 function sideHTML(){
   var nav=function(icon,label,extra){return '<button class="nav" data-stub="1">'+ic(icon)+label+(extra||'')+'</button>'};
+  // the operator's screen stands at one machine: no switching to other lines
+  if(role=="op")return '<aside class="side" data-tour="side"><div class="logo"><b>Н</b>Нейропром</div><div class="sec">Мой станок</div>'+curLine()+
+    '<div class="navsep"></div><button class="nav" data-goto="events">'+ic("bell")+'Остановки без причины'+(M_.untagged.length?'<span class="cnt">'+M_.untagged.length+'</span>':'')+'</button>'+
+    '<div class="note">Экран закреплён за этим станком. Другие линии видят начальник участка и начальник производства.</div></aside>';
   return '<aside class="side" data-tour="side"><div class="logo"><b>Н</b>Нейропром</div>'+nav("grid","Обзор цеха")+'<div class="sec">Участки</div>'+treeHTML()+
     '<div class="navsep"></div>'+'<button class="nav" data-goto="events">'+ic("bell")+'События'+(M_.untagged.length?'<span class="cnt">'+M_.untagged.length+'</span>':'')+'</button>'+nav("doc","Отчёты")+nav("gear","Настройки")+
     '<div class="note">В прототипе открывается только «Линия Цесис 2». Остальные пункты показывают структуру цеха.</div></aside>';
@@ -732,12 +749,14 @@ function treeHTML(){
 // navigation rail (medium width): Material 3 rail, the shop tree opens as a drawer
 function railHTML(){
   var it=function(icon,label,attr,on,cnt){return '<button class="ritem'+(on?' on':'')+'" '+attr+'><span class="ind">'+ic(icon)+'</span>'+label+(cnt?'<span class="cnt">'+cnt+'</span>':'')+'</button>'};
+  if(role=="op")return '<nav class="rail" data-tour="side"><div class="logo"><b>Н</b></div>'+it("line","Мой станок",'data-pick="1"',true)+it("bell","Без причины",'data-goto="events"',false,M_.untagged.length)+'</nav>';
   return '<nav class="rail" data-tour="side"><div class="logo"><b>Н</b></div>'+it("grid","Цех",'data-stub="1"')+it("line","Линии",'data-menu="open"',true)+
     it("bell","События",'data-goto="events"',false,M_.untagged.length)+it("doc","Отчёты",'data-stub="1"')+'<span class="rsp"></span>'+it("gear","Настройки",'data-stub="1"')+'</nav>';
 }
 // bottom navigation (compact): iOS tab bar / Material navigation bar, 4 destinations
 function tabbarHTML(){
   var it=function(id,icon,label,cnt){return '<button class="'+(ptab==id?'on':'')+'" data-ptab="'+id+'"><span class="ind">'+ic(icon)+'</span>'+label+(cnt?'<span class="cnt">'+cnt+'</span>':'')+'</button>'};
+  if(role=="op")return '<nav class="tabbar" data-tour="side">'+it("shift","box","Смена")+it("events","bell","События",M_.untagged.length)+it("more","more","Ещё")+'</nav>';
   return '<nav class="tabbar" data-tour="side">'+it("shift","box","Смена")+it("lines","line","Линии")+it("events","bell","События",M_.untagged.length)+it("more","more","Ещё")+'</nav>';
 }
 function shell(content){
@@ -799,9 +818,9 @@ function helpHTML(){
   var lg=ORDER.map(function(k){return '<i style="background:'+cv(ST[k].c)+'"></i><div><b>'+ST[k].n+'</b> — '+ST[k].d+'</div>'}).join("");
   return '<div class="bk" data-help="1"></div><div class="pnl"><div class="hd"><h2>Пояснения к прототипу</h2><button class="btn lt" data-help="1">Закрыть</button></div>'+
   '<p>Экран смены одной линии — «Линия Цесис 2», сварка арматурных сеток. Единица выпуска — карта. Интерфейс общий для любого завода, термины линии настраиваются.</p>'+
-  '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки. Если линия встала без причины, ему сразу приходит уведомление (в демо — переключите «Линия сейчас» на «Станок стоит»). Линию выбирает в меню, как и остальные роли; название линии повторяется в вопросе о причине, чтобы не перепутать.</li>'+
+  '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки. Работает на экране у станка (телефона у оператора нет), экран закреплён за своей линией. Если линия встала без причины, вопрос сразу появляется на весь экран (в демо — переключите «Линия сейчас» на «Станок стоит»). Линию выбирает в меню, как и остальные роли; название линии повторяется в вопросе о причине, чтобы не перепутать.</li>'+
   '<li><b>Начальник участка</b> — что требует действия сейчас: остановки без причины, переналадки сверх нормы, журнал событий.</li>'+
-  '<li><b>Директор / собственник</b> — итог смены, куда ушло время, выпуск по шаблонам.</li></ul>'+
+  '<li><b>Начальник производства</b> (директор, собственник) — итог смены, куда ушло время, выпуск по шаблонам. Задаёт названия шаблонов.</li></ul>'+
   '<p>Переключатель «Экран» показывает каждую роль на телефоне (iPhone, 393 × 852 pt), планшете (iPad Air 11″, 1180 × 820 pt, можно повернуть) и десктопе. Если устройство не помещается в окно, оно пропорционально уменьшается. Навигация следует гайдлайнам Apple и Google: на телефоне — нижняя панель, на планшете вертикально — узкая панель (rail), горизонтально и на десктопе — сайдбар. Зоны нажатия не меньше 48, отступы по 8-пиксельной сетке.</p>'+
   '<p>Переключатель «Линия сейчас» в верхней полосе показывает, как экран выглядит, когда линия стоит и когда пропала связь. Время обновления видно только при устаревших данных.</p>'+
   '<h3>Цвета состояний</h3><div class="lg">'+lg+'</div>'+
@@ -822,9 +841,9 @@ function helpHTML(){
 var TOURS={
   op:[
     ["demo","Это прототип на демо-данных","Здесь переключаются роль, устройство (телефон, планшет, десктоп) и состояние линии. Цифры вымышлены."],
-    ["side","Выбор линии","Слева — участки, линии и станки со статусами. Выделенная строка — линия, с которой вы работаете. На телефоне — вкладка «Линии» в нижней панели, на планшете вертикально — узкая панель слева."],
+    ["side","Мой станок","Экран стоит у станка и закреплён за ним: другие линии здесь не открываются. Рядом — остановки, у которых ещё нет причины."],
     ["status","Состояние линии","Видно издалека: цвет и одно слово. Ниже — сколько длится и какой шаблон в работе."],
-    ["reasons","Линия встала — укажите причину","Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
+    ["reasons","Линия встала — укажите причину","Если причины нет, вопрос сразу появляется на весь экран — его видно издалека. Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
     ["unt","Прошлые остановки без причины","Если причину не указали сразу, она ждёт здесь. Минуты сразу попадают в отчёт начальника участка."],
     ["prog","Сколько сделано","Выпуск за смену и отметка «где надо быть по графику». Без красного: план пока не утверждён."],
     ["timeline","Лента смены","Каждый цвет — состояние линии. Нажмите на участок — покажет время и причину. В легенде только то, что было за смену."],
@@ -890,7 +909,7 @@ function placeTour(){
   if(bottom+12+th<innerHeight)tt=bottom+12;else if(top-12-th>0)tt=top-12-th;else tt=innerHeight-th-12;
   tip.style.left=tl+"px";tip.style.top=tt+"px";
 }
-function endTour(){tour=null;var t=$("tour");if(t)t.remove()}
+function endTour(){tour=null;var t=$("tour");if(t)t.remove();if(role=="op")render()}
 function openHelp(){var h=$("help");h.innerHTML=helpHTML();h.classList.add("open")}
 function closeHelp(){$("help").classList.remove("open")}
 
@@ -901,42 +920,37 @@ function render(){
   frame();
   compact=$("app").clientWidth<600;
   var keep=document.querySelector(".scr"),top=keep?keep.scrollTop:0;
-  $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>';
+  $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>'+promptHTML();
   if(screen!="desk")document.querySelector(".scr").scrollTop=top;
-  $("screens").innerHTML=SCREENS.map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
+  $("screens").innerHTML=SCREENS.filter(function(r){return !(role=="op"&&r[0]=="phone")}).map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
     (screen=="tab"?'<button data-rotate="1" title="Повернуть планшет">↻ '+(tabRot=="land"?"Вертикально":"Горизонтально")+'</button>':'');
-  notif();
   $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
 }
-// the operator is told about a stop without a reason right away (product rule), once per stop
-var notifT;
-function notif(){
-  var c=M_.cur,need=role=="op"&&c[2]==2&&!tags[c[0]];
-  if(need&&!tour&&notifFor!==c[0]){notifOn=true;notifFor=c[0]}
-  if(!need)notifOn=false;
-  var el=$("notif");
-  if(!notifOn){el.classList.remove("show");return}
-  if(!el.classList.contains("show"))el.innerHTML='<span class="app">Н</span><span class="tx"><span class="meta"><span>Нейропром</span><span>сейчас</span></span>'+
-    '<b>Цесис 2 стоит без причины</b><p>Остановка в '+hm(c[0])+', уже '+dur(M_.curDur)+'. Нажмите, чтобы указать причину.</p></span>';
-  if(!el.classList.contains("show")){clearTimeout(notifT);notifT=setTimeout(function(){notifOn=false;el.classList.remove("show")},8000)}   // like a system banner; the reasons card stays on screen
-  el.classList.add("show");
+// a stop without a reason takes over the operator's screen right away (product rule); "later" folds it into the card
+function promptHTML(){
+  var c=M_.cur;
+  if(role!="op"||tour||c[2]!=2||tags[c[0]]||promptLater===c[0])return "";
+  return '<div class="prompt" role="dialog" aria-modal="true" aria-labelledby="pq"><div class="pbox"><div class="pt"><span class="ic">'+ic("stop")+'</span><div>'+
+    '<div class="ctx">Линия Цесис 2 · стоит '+dur(M_.curDur)+', с '+hm(c[0])+'</div><h2 id="pq">Почему остановилась Цесис 2?</h2></div></div>'+
+    reasonBtns(c[0])+'<div class="later"><button class="btn lt" data-later="'+c[0]+'">Укажу позже</button></div></div></div>';
 }
 function scrollTopApp(){window.scrollTo(0,0);var sc=document.querySelector(".scr");if(sc)sc.scrollTop=0}
 document.addEventListener("click",function(e){
   var seg=e.target.closest(".tl .seg");
   if(seg&&!tour){selSeg=+seg.dataset.i===selSeg?null:+seg.dataset.i;render();return}
-  var b=e.target.closest("button,[data-help],[data-menu],[data-notif]");if(!b)return;
+  var b=e.target.closest("button,[data-help],[data-menu]");if(!b)return;
   var d=b.dataset;
-  if(d.notif){notifOn=false;$("notif").classList.remove("show");
-    if(d.notif=="open"){if(ptab!="shift"){ptab="shift";render()}var a=document.querySelector(".ask");if(a){a.scrollIntoView({behavior:"smooth",block:"center"});a.classList.remove("flash");void a.offsetWidth;a.classList.add("flash")}}
-    return}
   if(d.menu){$("app").classList.toggle("menu",d.menu=="open");return}
+  if(d.later){promptLater=+d.later;render();return}
+  if(d.tedit){editTpl=d.tedit;render();var t=document.querySelector(".tin");if(t)t.focus();return}
+  if(d.tsave){saveTpl(d.tsave);return}
+  if(d.tcancel){editTpl=null;render();return}
   if(d.pick){$("app").classList.remove("menu");if(ptab!="shift"){ptab="shift";render();scrollTopApp()}return}
   if(d.ptab){ptab=d.ptab;render();scrollTopApp();return}
   if(d.goto){$("app").classList.remove("menu");
     if(compact){ptab="events";render();scrollTopApp();return}
-    var ev=document.querySelector('[data-tour="events"]');if(ev)ev.scrollIntoView({behavior:"smooth",block:"start"});else toast("Журнал событий в прототипе есть у начальника участка и директора");return}
+    var ev=document.querySelector('[data-tour="events"]')||document.querySelector('[data-tour="unt"]');if(ev)ev.scrollIntoView({behavior:"smooth",block:"start"});else toast("Журнал событий в прототипе есть у начальника участка и начальника производства");return}
   if(d.stub){toast("В прототипе открывается только «Линия Цесис 2»");return}
   if(d.unit){closedUnits[d.unit]=!closedUnits[d.unit];render();return}
   if(d.tstep){showStep(tour.i+(+d.tstep));return}
@@ -945,8 +959,8 @@ document.addEventListener("click",function(e){
   if(d.help){$("help").classList.contains("open")?closeHelp():openHelp();return}
   if(d.rotate){tabRot=tabRot=="land"?"port":"land";try{localStorage.setItem("cesis2-rot",tabRot)}catch(x){}var a2=$("app");a2.classList.add("noanim");render();setTimeout(function(){a2.classList.remove("noanim")},60);return}
   if(d.screen){screen=d.screen;try{localStorage.setItem("cesis2-screen",screen)}catch(x){}var ap=$("app");ap.classList.remove("menu");ap.classList.add("noanim");render();setTimeout(function(){ap.classList.remove("noanim")},60);window.scrollTo(0,0);return}
-  if(d.role){role=d.role;$("app").classList.remove("menu");try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
-  else if(d.scen){scen=d.scen;openTag=null;selSeg=null;notifFor=null}
+  if(d.role){role=d.role;if(role=="op"&&screen=="phone"){screen="tab";tabRot="land"}$("app").classList.remove("menu");try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
+  else if(d.scen){scen=d.scen;openTag=null;selSeg=null;promptLater=null}
   else if(d.tag){tags[+d.start]=d.tag;openTag=null}
   else if(d.untag){delete tags[+d.untag]}
   else if(d.open){openTag=openTag===+d.open?null:+d.open}
@@ -974,7 +988,7 @@ function frame(){
 }
 addEventListener("resize",function(){frame();if(($("app").clientWidth<600)!=compact)render();placeTour()});
 document.addEventListener("keydown",function(e){
-  if((e.key=="Enter"||e.key==" ")&&e.target.id=="notif"){e.preventDefault();e.target.click();return}
+  if(e.key=="Enter"&&e.target.classList.contains("tin")){e.preventDefault();saveTpl(e.target.dataset.tid);return}
   if(tour){if(e.key=="Escape")endTour();else if(e.key=="ArrowRight")showStep(tour.i+1);else if(e.key=="ArrowLeft")showStep(tour.i-1)}
   else if(e.key=="Escape")closeHelp();
 });
