@@ -15,6 +15,9 @@
   /* color */
   --bg:#E6EAEB;--side:#F4F6F6;--card:#FFFFFF;--inner:#F3F5F6;--line:#E2E6E8;--tx:#14181D;--mu:#5A636E;--soft:#ECEFF1;--ink:#121519;--ink-tx:#FFFFFF;
   --ok:#2F8F63;--idle:#6E7A89;--pause:#D99A16;--wait:#B5835A;--setup:#7A62D6;--heat:#E57A2E;--fault:#D2433A;--estop:#8A1F1F;--nodata:#C5CBD1;
+  /* line states: fill + text on it. A "quiet normal" (ISA-101 style): running is calm, only deviations are saturated */
+  --s-run:#C9DCD0;--s-run-fg:#24513A;--s-stop:#C8372D;--s-stop-fg:#FFFFFF;--s-pause:#F2C14E;--s-pause-fg:#4A3300;--s-wait:#E3C79A;--s-wait-fg:#4A3300;
+  --s-setup:#CFC9EE;--s-setup-fg:#3C3489;--s-heat:#EE9A5B;--s-heat-fg:#4A2200;--s-fault:#7E1F1A;--s-fault-fg:#FFFFFF;--s-estop:#4A0F0C;--s-estop-fg:#FFFFFF;--s-nodata:#E4E4E1;--s-nodata-fg:#5F5E5A;
   --blue:#8CCDEB;--blue-d:#2E9BD0;--warn-bg:#FFF2CC;--warn-tx:#634700;--tpl1:#3F6FD1;--tpl2:#22899B;
   --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.04);
   /* spacing */
@@ -31,6 +34,10 @@
   --safe-b:env(safe-area-inset-bottom,0px);
   --ff:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
+/* B "muted andon": classic traffic-light meaning, lower saturation */
+body.pal-b{--s-run:#4F8A68;--s-run-fg:#FFFFFF;--s-stop:#C0463A;--s-pause:#D9AE4A;--s-pause-fg:#3D2A00;--s-wait:#C29A6B;--s-wait-fg:#2E1F0A;--s-setup:#6E68B0;--s-setup-fg:#FFFFFF;--s-heat:#D9773A;--s-heat-fg:#FFFFFF;--s-fault:#8E2A22;--s-estop:#5A1712;--s-nodata:#A9AEB4;--s-nodata-fg:#22262B}
+/* C "monochrome + signal": colour only where something is wrong */
+body.pal-c{--s-run:#E2E1DB;--s-run-fg:#2C2C2A;--s-setup:#B4B2A9;--s-setup-fg:#2C2C2A;--s-wait:#E8D6A8;--s-heat:#E8873E;--s-heat-fg:#2C1300;--s-fault:#2C2C2A;--s-estop:#000000;--s-nodata:#F1F1EF}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:var(--t-body) Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
@@ -211,7 +218,7 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 .nbar em{position:absolute;top:calc(-1*var(--s1));bottom:calc(-1*var(--s1));width:4px;border-radius:2px;background:var(--tx)}
 /* operator status + progress */
 .op{max-width:960px}
-.status{border-radius:var(--r3);padding:var(--s5);color:#fff;margin-bottom:var(--s3);display:flex;align-items:center;gap:var(--s4)}
+.status{border-radius:var(--r3);padding:var(--s4) var(--s5);color:#fff;margin-bottom:var(--s3);display:flex;align-items:center;gap:var(--s4)}
 .status.old{opacity:.55;filter:grayscale(.4)}
 .status>div{min-width:0}
 .status .lbl{font:var(--t-lg) var(--ff);opacity:.9}
@@ -314,7 +321,7 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
   .tl{height:var(--s7)}.tpl .seg{font:600 var(--t-cap) var(--ff)}
   .unt-row .btn{margin-left:0;width:100%}
   .tplc .n{font:800 var(--t-h3) var(--ff)}
-  .prompt{padding:var(--s3)}.pbox{padding:var(--s4)}.pbox h2{font:800 var(--t-h3) var(--ff)}.pbox .rbtn{min-height:var(--s9);font:700 var(--t-body) var(--ff)}
+  .a-big{font:800 var(--t-d2) var(--ff)}.a-q{font:800 var(--t-h3) var(--ff)}.andon{padding:var(--s3)}.ohead{flex-wrap:wrap}.omark span{display:none}
 }
 
 /* =====================================================================
@@ -379,24 +386,53 @@ body.tab.port .screen{width:820px;height:1180px}
 .ask.flash{animation:ask-flash 1.2s ease-out}
 @keyframes ask-flash{0%,40%{box-shadow:0 0 0 4px var(--pause)}100%{box-shadow:var(--shadow)}}
 @media (prefers-reduced-motion:reduce){.ask.flash{animation:none;box-shadow:0 0 0 4px var(--pause)}}
-/* full-screen reason prompt (operator screen at the machine): readable from a distance, one tap */
-.prompt{position:fixed;inset:var(--barh,56px) 0 0 0;z-index:70;background:rgba(18,21,25,.72);display:flex;align-items:center;justify-content:center;padding:var(--s4);animation:prompt-in .2s ease-out}
-body.dev .prompt{inset:0}
-.pbox{width:min(1104px,100%);max-height:100%;overflow:auto;background:var(--warn-bg);border-radius:var(--r3);padding:var(--s5);box-shadow:0 24px 64px rgba(0,0,0,.3)}
-.pbox .pt{display:flex;gap:var(--s3);align-items:center;margin-bottom:var(--s4)}
-.pbox .pt .ic{background:var(--idle);color:#fff}
-.pbox .ctx{font:var(--t-lg) var(--ff);color:var(--warn-tx)}
-.pbox h2{font:800 var(--t-d1) var(--ff);color:var(--warn-tx)}
-.pbox .rbtn{min-height:96px;font:700 var(--t-ttl) var(--ff)}
-.pbox .later{display:flex;justify-content:flex-end;margin-top:var(--s4)}
-@keyframes prompt-in{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){.prompt{animation:none}}
 .nl.static{cursor:default}
 .tn{font:700 var(--t-body) var(--ff);color:var(--tx)}
 .tname{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin-top:var(--s2)}
 .tin{min-height:var(--tap);flex:1;min-width:160px;border:0;box-shadow:inset 0 0 0 1px var(--line);border-radius:var(--rp);padding:0 var(--s3);font:var(--t-body) var(--ff);color:var(--tx);background:var(--card)}
 .tin:focus{outline:none;box-shadow:inset 0 0 0 2px var(--ink)}
 .btn.sm{min-height:40px;padding:0 var(--s3);font:600 var(--t-sm) var(--ff)}
+/* operator screen at the machine: minimal header, andon when the line stops */
+.opwrap{min-height:calc(100vh - var(--barh,56px));display:flex;flex-direction:column;background:var(--bg)}
+body.dev .opwrap{min-height:100%}
+.opwrap .op{padding:0 var(--s4) var(--s4);max-width:1152px;width:100%;margin:0 auto}
+.ohead{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s4);max-width:1152px;width:100%;margin:0 auto}
+.omark{display:inline-flex;align-items:center;gap:var(--s2);font:700 var(--t-sm) var(--ff);color:var(--mu);padding-right:var(--s3);box-shadow:1px 0 0 var(--line)}
+.omark b{width:32px;height:32px;border-radius:var(--r1);background:var(--ink);color:var(--ink-tx);display:grid;place-items:center;font:800 var(--t-sm) var(--ff)}
+.ohead h1{font:800 var(--t-h3) var(--ff)}
+.ohead .sp{flex:1}
+.ometa{display:inline-flex;align-items:center;gap:var(--s2);font:var(--t-sm) var(--ff);color:var(--mu)}
+.ometa svg{width:20px;height:20px}
+.ometa b{color:var(--tx);font-weight:600}
+.obell .ocnt{position:absolute;top:2px;right:0;min-width:20px;height:20px;border-radius:10px;background:var(--s-stop);color:#fff;font:700 12px/20px var(--ff);text-align:center;padding:0 4px}
+.alarm{background:var(--a);color:var(--af)}
+.alarm .omark,.alarm .ometa,.alarm .ometa b{color:inherit}
+.alarm .omark{box-shadow:1px 0 0 currentColor}
+.alarm .omark b{background:var(--af);color:var(--a)}
+.alarm .obell{background:transparent;box-shadow:inset 0 0 0 2px currentColor;color:inherit}
+.alarm .obell .ocnt{background:var(--af);color:var(--a)}
+.andon{flex:1;display:flex;flex-direction:column;justify-content:center;gap:var(--s3);padding:var(--s4) var(--s4) var(--s6);max-width:1152px;width:100%;margin:0 auto}
+.a-big{font:800 96px/104px var(--ff);letter-spacing:-.02em}
+.a-meta{font:var(--t-h3) var(--ff)}
+.a-q{font:800 var(--t-h2) var(--ff);margin-top:var(--s3)}
+.andon .rbtn{background:#FFFFFF;color:#14181D;box-shadow:none}
+.andon .rbtn:hover{box-shadow:inset 0 0 0 3px #14181D}
+.a-act{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s2)}
+.btn.a-sec{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px currentColor}
+.btn.a-pri{background:var(--af);color:var(--a);min-height:var(--s8);padding:0 var(--s5);font:700 var(--t-lg) var(--ff)}
+.a-done{display:flex;align-items:center;gap:var(--s2);font:700 var(--t-h3) var(--ff)}
+.a-done svg{width:32px;height:32px}
+.status .btn.a-sec{margin-left:auto}
+.pr-row{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s3) var(--s5);flex-wrap:wrap}
+.pr-num{font:800 var(--t-d2) var(--ff);letter-spacing:-.02em}
+.pr-num small{font:500 var(--t-ttl) var(--ff);color:var(--mu);letter-spacing:0}
+.pr-side{display:flex;gap:var(--s5);margin:0;flex-wrap:wrap}
+.pr-side dt{font:var(--t-sm) var(--ff);color:var(--mu)}
+.pr-side dd{margin:0;font:700 var(--t-ttl) var(--ff)}
+.pr-bar{position:relative;height:var(--s2);border-radius:var(--s1);background:var(--soft);margin-top:var(--s5)}
+.pr-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:var(--s1);background:var(--tx)}
+.pr-bar em{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--mu)}
+.pr-bar em span{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);white-space:nowrap;font:var(--t-cap) var(--ff);font-style:normal;color:var(--mu)}
 /* toast */
 #toast{position:fixed;left:50%;bottom:var(--s4);transform:translateX(-50%);background:#121519;color:#fff;border-radius:var(--r2);padding:var(--s2) var(--s3);min-height:var(--tap);display:flex;align-items:center;font:var(--t-sm) var(--ff);z-index:120;box-shadow:0 8px 32px rgba(0,0,0,.25);max-width:calc(100vw - 32px)}
 /* guided tour */
@@ -429,6 +465,7 @@ body.dev .prompt{inset:0}
   <div class="ctl" data-tour="demo"><span>Роль</span><div id="roles"></div></div>
   <div class="ctl scrn"><span>Экран</span><div id="screens"></div></div>
   <div class="ctl"><span>Линия сейчас</span><div id="scens"></div></div>
+  <div class="ctl"><span>Цвета</span><div id="pals"></div></div>
   <div class="right"><button class="dbtn" data-tourstart="1">Тур по экрану</button><button class="dbtn" data-help="1" data-tour="help">Пояснения</button></div>
 </div>
 <div id="devbox"><div id="dev"><span class="cam"></span><div class="screen"><div class="sbar" id="sbar"></div><span class="island"></span><div id="app"></div><span class="homeind"></span></div></div></div>
@@ -439,15 +476,15 @@ body.dev .prompt{inset:0}
 var T0=480, SH=720, NOW=700, PLAN=520, SETUP_NORM=20; // PLAN and SETUP_NORM: demo values, real ones to be confirmed
 // states follow the signal map of the line (priority order there); "unconf": rule not yet checked on the line
 var ST={
-  0:{n:"Нет данных",          big:"НЕТ ДАННЫХ",     lc:"нет данных",            c:"--nodata",g:null,            d:"Обрыв связи с ПЛК. Не простой: в потери и «% в работе» не входит."},
-  1:{n:"Работа",              big:"РАБОТАЕТ",       lc:"работа",                c:"--ok",    g:null,            d:"Линия выпускает карты."},
-  2:{n:"Стоп",                big:"СТОП",           lc:"стопы без причины",     c:"--idle",  g:"Причина не указана", d:"Нажата кнопка «Стоп». Почему — знает только оператор, поэтому его просят указать причину."},
-  3:{n:"Пауза",               big:"ПАУЗА",          lc:"паузы",                 c:"--pause", g:"Материал", unconf:true, d:"Линия ждёт поперечную заготовку. Определяется по сигналам ПЛК, правило ещё проверяется."},
-  8:{n:"Ожидание материала",  big:"ЖДЁМ МАТЕРИАЛ",  lc:"ожидание материала",    c:"--wait",  g:"Материал", unconf:true, d:"Нет заготовки дольше 20 секунд. Гипотеза, проверяется на линии."},
-  4:{n:"Переналадка",         big:"ПЕРЕНАЛАДКА",    lc:"переналадка",           c:"--setup", g:"Плановое",      d:"Смена шаблона. Плановая работа, но считается против нормы: превышение — потеря."},
-  5:{n:"Тепловая защита",     big:"ТЕПЛОВАЯ ЗАЩИТА",lc:"тепловая защита",       c:"--heat",  g:"Предупреждения",d:"Сработала тепловая защита контактора. Показывается как предупреждение, а не авария."},
-  6:{n:"Авария привода",      big:"АВАРИЯ",         lc:"авария привода",        c:"--fault", g:"Аварии",        d:"Авария сервопривода или преобразователя частоты."},
-  7:{n:"Аварийный стоп",      big:"АВАРИЙНЫЙ СТОП", lc:"аварийный стоп",        c:"--estop", g:"Аварии",        d:"Нажата кнопка аварийного останова."}
+  0:{n:"Нет данных",          big:"НЕТ ДАННЫХ",     lc:"нет данных",            c:"--s-nodata",g:null,            d:"Обрыв связи с ПЛК. Не простой: в потери и «% в работе» не входит."},
+  1:{n:"Работа",              big:"РАБОТАЕТ",       lc:"работа",                c:"--s-run",    g:null,            d:"Линия выпускает карты."},
+  2:{n:"Стоп",                big:"СТОП",           lc:"стопы без причины",     c:"--s-stop",  g:"Причина не указана", d:"Нажата кнопка «Стоп». Почему — знает только оператор, поэтому его просят указать причину."},
+  3:{n:"Пауза",               big:"ПАУЗА",          lc:"паузы",                 c:"--s-pause", g:"Материал", unconf:true, d:"Линия ждёт поперечную заготовку. Определяется по сигналам ПЛК, правило ещё проверяется."},
+  8:{n:"Ожидание материала",  big:"ЖДЁМ МАТЕРИАЛ",  lc:"ожидание материала",    c:"--s-wait",  g:"Материал", unconf:true, d:"Нет заготовки дольше 20 секунд. Гипотеза, проверяется на линии."},
+  4:{n:"Переналадка",         big:"ПЕРЕНАЛАДКА",    lc:"переналадка",           c:"--s-setup", g:"Плановое",      d:"Смена шаблона. Плановая работа, но считается против нормы: превышение — потеря."},
+  5:{n:"Тепловая защита",     big:"ТЕПЛОВАЯ ЗАЩИТА",lc:"тепловая защита",       c:"--s-heat",  g:"Предупреждения",d:"Сработала тепловая защита контактора. Показывается как предупреждение, а не авария."},
+  6:{n:"Авария привода",      big:"АВАРИЯ",         lc:"авария привода",        c:"--s-fault", g:"Аварии",        d:"Авария сервопривода или преобразователя частоты."},
+  7:{n:"Аварийный стоп",      big:"АВАРИЙНЫЙ СТОП", lc:"аварийный стоп",        c:"--s-estop", g:"Аварии",        d:"Нажата кнопка аварийного останова."}
 };
 var ORDER=[1,2,3,8,4,5,6,7,0];
 var BASE=[[0,95,1],[95,102,3],[102,170,1],[170,185,2],[185,215,4],[215,300,1],[300,318,6],[318,330,0],[330,400,1],[400,420,2],[420,505,1],[505,512,5],[512,600,1],[600,606,8],[606,700,1]];
@@ -461,7 +498,8 @@ function rateAt(m){return m<185?R12:R27}
 function tplAt(m){return m<185?"12":"27"}
 
 var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Начальник производства","НП","Производство"]];
-var SCENS=[["run","Работает"],["stop","Станок стоит"],["nolink","Нет связи"]];
+var SCENS=[["run","Работает"],["stop","Станок стоит"],["fault","Авария"],["nolink","Нет связи"]];
+var PALS=[["a","A","Тихая норма"],["b","B","Приглушённый андон"],["c","C","Монохром + сигнал"]];
 var SCREENS=[["phone","Телефон"],["tab","Планшет"],["desk","Десктоп"]];
 // shop structure for the sidebar: unit -> lines/machines; state uses ST codes, -1 = switched off. Only Cesis 2 opens.
 var UNITS=[
@@ -469,7 +507,8 @@ var UNITS=[
   {id:"bend",n:"Гибочный участок",items:[["Гибочный ГС-1",6],["Гибочный ГС-2",-1]]}
 ];
 var WORD={1:"",2:"стоп",3:"простой",4:"наладка",5:"перегрев",6:"авария",7:"авар. стоп",8:"простой",0:"нет данных","-1":"выключен"};
-var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={},ptab="shift",compact=false,promptLater=null,tplNames={},editTpl=null;
+var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={},ptab="shift",compact=false,promptLater=null,tplNames={},editTpl=null,called={},pal="a";
+try{pal=localStorage.getItem("cesis2-pal")||"a"}catch(x){}
 var tabRot="land";
 try{screen=localStorage.getItem("cesis2-screen")||"desk";tabRot=localStorage.getItem("cesis2-rot")||"land"}catch(x){}
 if(!SCREENS.some(function(x){return x[0]==screen}))screen=screen=="small"?"phone":"desk";
@@ -490,6 +529,7 @@ var IC={
   search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
   stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',
   play:'<path d="M8 5v14l11-7z"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   swap:'<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
   target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
   x:'<path d="M6 6l12 12M18 6 6 18"/>',
@@ -509,12 +549,13 @@ function plural(n,a,b,c){var m=n%10,mm=n%100;return m==1&&mm!=11?a:m>=2&&m<=4&&(
 function reasonInfo(r){return REASONS.filter(function(x){return x[0]==r})[0]}
 function segGroup(s){var t=s[2]==2&&tags[s[0]];return t?reasonInfo(t)[1]:ST[s[2]].g}
 function srcHTML(st,tag){if(st==0)return "";return (tag?'<span class="src opr">Оператор</span>':'<span class="src">ПЛК</span>')+(!tag&&ST[st].unconf?' <span class="tbd">не подтверждено</span>':'')}
-var TBD=' <span class="tbd">демо, уточняется</span>', EST=' <span class="tbd">оценка</span>';
+var TBD='', EST=' <span class="tbd">оценка</span>';
 
 // ---- model: everything is derived from the segments and the operator's tags ----
 function model(){
   var seg=BASE.map(function(s){return s.slice()});
   if(scen=="stop"){seg[seg.length-1]=[606,685,1];seg.push([685,700,2])}
+  if(scen=="fault"){seg[seg.length-1]=[606,692,1];seg.push([692,700,6])}
   var M={seg:seg,work:0,done:0,nodata:0,items:{},byState:{},tpl:{"12":{work:0,nd:0,cards:0},"27":{work:0,nd:0,cards:0}}};
   seg.forEach(function(s){
     var d=s[1]-s[0];
@@ -781,28 +822,42 @@ function phonePage(){
 }
 
 // ---- views ----
+// operator: a screen fixed at one machine — minimal header, no navigation
+function opHeader(M){
+  return '<header class="ohead"><span class="omark"><b>Н</b><span>Нейропром</span></span><h1>Линия Цесис 2</h1><span class="sp"></span>'+
+    '<span class="ometa">Смена <b>08:00–20:00</b></span><span class="ometa">'+ic("user")+'<b>Иванов И.</b></span>'+
+    '<button class="ibtn obell" data-goto="events" aria-label="Остановки без причины">'+ic("bell")+(M.untagged.length?'<span class="ocnt">'+M.untagged.length+'</span>':'')+'</button></header>';
+}
 function viewOperator(M){
-  var c=M.cur,col=(c[2]==3||c[2]==8||c[2]==0)?"#121519":"#fff",tag=tags[c[0]];
-  var h='<div class="op">';
-  h+='<section class="status'+(scen=="nolink"?' old':'')+'" data-tour="status" style="background:'+cv(ST[c[2]].c)+';color:'+col+'"><span class="ring">'+ic(c[2]==1?"play":"stop")+'</span><div><div class="lbl">'+(scen=="nolink"?"Последнее известное состояние":"Линия сейчас")+'</div><div class="big">'+ST[c[2]].big+'</div>'+
-     '<div class="for">'+(c[2]==1?'уже '+dur(M.curDur)+' · шаблон №27':dur(M.curDur)+' · '+(c[2]==2?(tag?'причина: '+tag:'причина не указана'):why[c[2]]))+'</div></div></section>';
-  if(c[2]==2){
-    if(!tag)h+='<section class="card ask mb" data-tour="reasons"><h2>Почему остановилась Цесис 2?</h2>'+reasonBtns(c[0])+'</section>';
-    else h+='<section class="card mb"><div class="done-r"><span class="ic" style="--c:var(--ok)">'+ic("check")+'</span><span>Записано: '+tag+'</span><button class="btn lt" data-untag="'+c[0]+'">Изменить</button></div></section>';
+  var c=M.cur,k=c[2],tag=tags[c[0]],st=ST[k],fg=cv(st.c+'-fg');
+  // andon: while the line is stopped the whole screen takes the state colour, visible from across the shop
+  if(k!=1&&scen!="nolink"&&promptLater!==c[0]){
+    var h='<div class="opwrap alarm" style="--a:'+cv(st.c)+';--af:'+fg+'">'+opHeader(M)+'<section class="andon" data-tour="reasons">'+
+      '<div class="a-big">'+st.big+'</div><div class="a-meta">'+dur(M.curDur)+' · с '+hm(c[0])+(k==2?'':' · '+why[k])+'</div>';
+    if(k==2&&!tag)h+='<h2 class="a-q">Почему остановилась Цесис 2?</h2>'+reasonBtns(c[0])+'<div class="a-act"><button class="btn a-sec" data-later="'+c[0]+'">Укажу позже</button></div>';
+    else if(k==2)h+='<div class="a-done">'+ic("check")+'Причина записана: '+tag+'</div><div class="a-act"><button class="btn a-sec" data-untag="'+c[0]+'">Изменить причину</button><button class="btn a-sec" data-later="'+c[0]+'">Свернуть</button></div>';
+    else h+='<div class="a-act"><button class="btn a-pri" data-master="'+c[0]+'">'+(called[c[0]]?'Мастер вызван · '+called[c[0]]:'Вызвать мастера')+'</button><button class="btn a-sec" data-later="'+c[0]+'">Свернуть</button></div>';
+    return h+'</section></div>';
   }
+  var h='<div class="opwrap">'+opHeader(M)+'<div class="op">'+stale();
+  h+='<section class="status'+(scen=="nolink"?' old':'')+'" data-tour="status" style="background:'+cv(st.c)+';color:'+fg+'"><div>'+(scen=="nolink"?'<div class="lbl">Последнее известное состояние</div>':'')+'<div class="big">'+st.big+'</div>'+
+     '<div class="for">'+(k==1?'уже '+dur(M.curDur)+' · шаблон '+tplLabel("27"):dur(M.curDur)+' · '+(k==2?(tag?'причина: '+tag:'причина не указана'):why[k]))+'</div></div>'+
+     (k!=1&&scen!="nolink"?'<button class="btn a-sec" data-unfold="1">Развернуть</button>':'')+'</section>';
+  if(k==2&&!tag)h+='<section class="card ask mb"><h2>Почему остановилась Цесис 2?</h2>'+reasonBtns(c[0])+'</section>';
   // earlier stops still without a reason — the operator can close them too
-  var past=M.untagged.filter(function(s){return s[0]!=c[0]});
+  var past=M.untagged.filter(function(x){return x[0]!=c[0]});
   if(past.length){
     h+='<section class="card mb" data-tour="unt"><div class="ch"><h2>Остановки без причины: '+past.length+'</h2><div class="sub">Укажите, почему стояли — эти минуты попадут в отчёт начальника участка.</div></div>';
-    past.forEach(function(s){
-      h+='<div class="unt-row"><span class="tm">'+hm(s[0])+'–'+hm(s[1])+'</span><b>Стоп · '+(s[1]-s[0])+' мин</b><button class="btn" data-open="'+s[0]+'">'+(openTag===s[0]?'Свернуть':'Указать причину')+'</button>'+(openTag===s[0]?reasonBtns(s[0],true):'')+'</div>';
+    past.forEach(function(x){
+      h+='<div class="unt-row"><span class="tm">'+hm(x[0])+'–'+hm(x[1])+'</span><b>Стоп · '+(x[1]-x[0])+' мин</b><button class="btn" data-open="'+x[0]+'">'+(openTag===x[0]?'Свернуть':'Указать причину')+'</button>'+(openTag===x[0]?reasonBtns(x[0],true):'')+'</div>';
     });
     h+='</section>';
   }
-  h+='<section class="card mb" data-tour="prog"><div class="ch"><span class="ic" style="--c:var(--ok)">'+ic("box")+'</span><h2>Сделано за смену</h2></div><div class="prog"><span class="num">'+M.done+'</span><span class="of">карт</span></div>'+
-     '<div class="prog-t"><i style="width:'+M.done/PLAN*100+'%"></i><em style="left:'+M.planNow/PLAN*100+'%"></em></div>'+
-     '<div class="prog-line">По графику к 19:40 — '+M.planNow+', за смену — '+PLAN+'.'+TBD+'</div></section>';
-  return shell(h+timeline(M,"Смена","Цвет — что делала линия.")+templates(M)+'</div>');
+  h+='<section class="card mb" data-tour="prog"><div class="pr-row"><div><div class="pr-num">'+M.done+' <small>карт</small></div><div class="sub">сделано за смену</div></div>'+
+     '<dl class="pr-side"><div><dt>По графику к 19:40</dt><dd>'+M.planNow+'</dd></div><div><dt>Темп</dt><dd>'+M.perHour.toFixed(0)+' карт/ч</dd></div><div><dt>План на смену</dt><dd>'+PLAN+'</dd></div></dl></div>'+
+     '<div class="pr-bar"><i style="width:'+M.done/PLAN*100+'%"></i><em style="left:'+M.planNow/PLAN*100+'%"><span>по графику</span></em></div></section>';
+  return h+timeline(M,"Смена","Цвет — что делала линия.")+templates(M)+
+    '<div class="foot">Данные демонстрационные: сценарий смены собран по ТЗ и карте сигналов линии.</div></div></div>';
 }
 function viewForeman(M){
   return shell(nowCard(M)+timeline(M,"Как прошла смена","Каждый цвет — состояние линии. Нажмите на участок, чтобы увидеть время и причину.")+templates(M)+
@@ -842,8 +897,8 @@ var TOURS={
   op:[
     ["demo","Это прототип на демо-данных","Здесь переключаются роль, устройство (телефон, планшет, десктоп) и состояние линии. Цифры вымышлены."],
     ["side","Мой станок","Экран стоит у станка и закреплён за ним: другие линии здесь не открываются. Рядом — остановки, у которых ещё нет причины."],
-    ["status","Состояние линии","Видно издалека: цвет и одно слово. Ниже — сколько длится и какой шаблон в работе."],
-    ["reasons","Линия встала — укажите причину","Если причины нет, вопрос сразу появляется на весь экран — его видно издалека. Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
+    ["status","Состояние линии","Цвет и одно слово видно издалека. Пока линия работает, экран спокойный; когда встала — весь экран становится цветом остановки. Ниже — сколько длится и какой шаблон в работе."],
+    ["reasons","Линия встала","Весь экран становится красным, и сразу — вопрос о причине. Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
     ["unt","Прошлые остановки без причины","Если причину не указали сразу, она ждёт здесь. Минуты сразу попадают в отчёт начальника участка."],
     ["prog","Сколько сделано","Выпуск за смену и отметка «где надо быть по графику». Без красного: план пока не утверждён."],
     ["timeline","Лента смены","Каждый цвет — состояние линии. Нажмите на участок — покажет время и причину. В легенде только то, что было за смену."],
@@ -920,21 +975,16 @@ function render(){
   frame();
   compact=$("app").clientWidth<600;
   var keep=document.querySelector(".scr"),top=keep?keep.scrollTop:0;
-  $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>'+promptHTML();
+  $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>';
   if(screen!="desk")document.querySelector(".scr").scrollTop=top;
   $("screens").innerHTML=SCREENS.filter(function(r){return !(role=="op"&&r[0]=="phone")}).map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
     (screen=="tab"?'<button data-rotate="1" title="Повернуть планшет">↻ '+(tabRot=="land"?"Вертикально":"Горизонтально")+'</button>':'');
   $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
+  document.body.classList.remove("pal-a","pal-b","pal-c");document.body.classList.add("pal-"+pal);
+  $("pals").innerHTML=PALS.map(function(r){return '<button data-pal="'+r[0]+'" title="'+r[2]+'" class="'+(r[0]==pal?"on":"")+'">'+r[1]+' · '+r[2]+'</button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
 }
 // a stop without a reason takes over the operator's screen right away (product rule); "later" folds it into the card
-function promptHTML(){
-  var c=M_.cur;
-  if(role!="op"||tour||c[2]!=2||tags[c[0]]||promptLater===c[0])return "";
-  return '<div class="prompt" role="dialog" aria-modal="true" aria-labelledby="pq"><div class="pbox"><div class="pt"><span class="ic">'+ic("stop")+'</span><div>'+
-    '<div class="ctx">Линия Цесис 2 · стоит '+dur(M_.curDur)+', с '+hm(c[0])+'</div><h2 id="pq">Почему остановилась Цесис 2?</h2></div></div>'+
-    reasonBtns(c[0])+'<div class="later"><button class="btn lt" data-later="'+c[0]+'">Укажу позже</button></div></div></div>';
-}
 function scrollTopApp(){window.scrollTo(0,0);var sc=document.querySelector(".scr");if(sc)sc.scrollTop=0}
 document.addEventListener("click",function(e){
   var seg=e.target.closest(".tl .seg");
@@ -943,11 +993,15 @@ document.addEventListener("click",function(e){
   var d=b.dataset;
   if(d.menu){$("app").classList.toggle("menu",d.menu=="open");return}
   if(d.later){promptLater=+d.later;render();return}
+  if(d.unfold){promptLater=null;render();scrollTopApp();return}
+  if(d.master){called[+d.master]=hm(NOW);render();toast("Мастер участка вызван");return}
+  if(d.pal){pal=d.pal;try{localStorage.setItem("cesis2-pal",pal)}catch(x){}render();return}
   if(d.tedit){editTpl=d.tedit;render();var t=document.querySelector(".tin");if(t)t.focus();return}
   if(d.tsave){saveTpl(d.tsave);return}
   if(d.tcancel){editTpl=null;render();return}
   if(d.pick){$("app").classList.remove("menu");if(ptab!="shift"){ptab="shift";render();scrollTopApp()}return}
   if(d.ptab){ptab=d.ptab;render();scrollTopApp();return}
+  if(d.goto&&role=="op"){promptLater=M_.cur[0];render();var u=document.querySelector('[data-tour="unt"]');if(u)u.scrollIntoView({behavior:"smooth",block:"start"});else toast("Остановок без причины нет");return}
   if(d.goto){$("app").classList.remove("menu");
     if(compact){ptab="events";render();scrollTopApp();return}
     var ev=document.querySelector('[data-tour="events"]')||document.querySelector('[data-tour="unt"]');if(ev)ev.scrollIntoView({behavior:"smooth",block:"start"});else toast("Журнал событий в прототипе есть у начальника участка и начальника производства");return}
