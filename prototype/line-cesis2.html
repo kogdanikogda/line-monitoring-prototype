@@ -199,19 +199,22 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 .verdict .why{color:var(--mu);font:var(--t-body) var(--ff)}
 .verdict .why b{color:var(--tx);font-weight:600}
 /* changeovers */
-.chg{display:grid;grid-template-columns:auto 1fr;gap:var(--s4);align-items:center}
-.chg .tot{padding-right:var(--s4);border-right:1px solid var(--line)}
-.chg .tot .v{font:800 var(--t-d1) var(--ff)}
-.chg .tot .v small{font:500 var(--t-lg) var(--ff);color:var(--mu)}
-.chg .tot .l{font:var(--t-sm) var(--ff);color:var(--mu);margin-top:var(--s1)}
-.chg .row{display:grid;grid-template-columns:120px 1fr 280px 112px;gap:var(--s3);align-items:center;min-height:var(--s9);border-top:1px solid var(--line)}
-.chg .row:first-child{border-top:0}
-.chg .tpls{display:flex;align-items:center;gap:var(--s2);font-weight:600}
-.chg .tpls i{font-style:normal;border-radius:var(--r1);color:#fff;padding:var(--s1) var(--s2);font:600 var(--t-sm) var(--ff)}
-.nbar{position:relative;height:var(--s3);background:var(--soft);border-radius:var(--r1)}
-.nbar b{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r1);background:var(--setup)}
-.nbar b.over{background:var(--fault);border-radius:0 var(--r1) var(--r1) 0}
-.nbar em{position:absolute;top:calc(-1*var(--s1));bottom:calc(-1*var(--s1));width:4px;border-radius:2px;background:var(--tx)}
+/* changeovers: totals across the top, one row per template change; the bar labels norm and overrun inside */
+.chg-stats{margin-bottom:var(--s3)}
+.chg-row{display:grid;grid-template-columns:200px minmax(0,1fr) 168px;gap:var(--s4);align-items:center;padding:var(--s3) 0;border-top:1px solid var(--line)}
+.chg-when{display:flex;flex-direction:column;gap:var(--s1)}
+.chg-when .tm{font:var(--t-sm) var(--ff);color:var(--mu);font-variant-numeric:tabular-nums}
+.tpls{display:flex;align-items:center;gap:var(--s2);font-weight:600}
+.tpls i{font-style:normal;border-radius:var(--r1);color:#fff;padding:var(--s1) var(--s2);font:600 var(--t-sm) var(--ff)}
+.chg-bar{display:flex;height:var(--s5);font:600 var(--t-sm) var(--ff)}
+.chg-bar span{display:flex;align-items:center;padding:0 var(--s2);white-space:nowrap;overflow:hidden;min-width:0}
+.cb-norm{background:var(--s-setup);color:var(--s-setup-fg);border-radius:var(--r1) 0 0 var(--r1)}
+.cb-norm:last-child{border-radius:var(--r1)}
+.cb-over{background:var(--s-stop);color:var(--s-stop-fg);border-radius:0 var(--r1) var(--r1) 0;justify-content:center}
+.cb-left{border:1px dashed var(--mu);border-left:0;color:var(--mu);border-radius:0 var(--r1) var(--r1) 0}
+.chg-res{text-align:right}
+.chg-res b{display:block;font:700 var(--t-ttl) var(--ff)}
+.chg-res span{font:600 var(--t-sm) var(--ff)}
 /* operator status + progress */
 .op{max-width:960px}
 .status{border-radius:var(--r3);padding:var(--s4) var(--s5);color:#fff;margin-bottom:var(--s3);display:flex;align-items:center;gap:var(--s4)}
@@ -290,7 +293,7 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
   .main{padding:0 var(--gut) var(--s4);border-radius:0}
   .side{position:fixed;left:0;top:0;bottom:0;height:auto;width:min(320px,86%);z-index:60;border-radius:0 var(--r3) var(--r3) 0;transform:translateX(-105%);transition:transform .25s ease;box-shadow:8px 0 32px rgba(0,0,0,.15)}
   .kpis{grid-template-columns:1fr 1fr}.two,.tp{grid-template-columns:1fr}
-  .chg .row{grid-template-columns:112px 1fr 1fr 104px}
+  .chg-row{grid-template-columns:160px minmax(0,1fr) 128px;gap:var(--s3)}
   .tr{grid-template-columns:112px 192px minmax(0,1fr) 72px}.tr .c{display:none}
   .reasons{grid-template-columns:repeat(4,1fr)}
 }
@@ -306,8 +309,8 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
   .verdict{grid-template-columns:1fr}.vic{display:none}.verdict .head{font:700 var(--t-ttl) var(--ff)}
   .axis .odd{display:none}
   .tr{grid-template-columns:1fr auto;gap:var(--s1) var(--s2)}.tr.th{display:none}.tr .c{display:none}.tr .tm{grid-column:1/-1}.tr .cause{grid-column:1/-1}
-  .chg{grid-template-columns:1fr}.chg .tot{border-right:0;padding-right:0;border-bottom:1px solid var(--line);padding-bottom:var(--s3)}
-  .chg .row{grid-template-columns:1fr auto;gap:var(--s2);padding:var(--s2) 0}.chg .row .nbar{grid-column:1/-1}
+  .chg-row{grid-template-columns:1fr auto;gap:var(--s2)}.chg-bar{grid-column:1/-1;grid-row:2}
+  .pr-side.chg-stats{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
   .loss{grid-template-columns:1fr 96px}.loss .bar{grid-column:1/-1;grid-row:2}
   .donut{grid-template-columns:1fr;justify-items:center}.donut ul{width:100%}
   .alert{flex-wrap:wrap}.alert .btn{margin-left:0}
@@ -740,18 +743,19 @@ function events(M,editable){
   return h+'</div></section>';
 }
 function changeovers(M){
-  var tot=M.changes.reduce(function(a,c){return a+c.d},0),mx=Math.max(SETUP_NORM*2,Math.max.apply(null,M.changes.map(function(c){return c.d})));
+  var tot=M.changes.reduce(function(a,c){return a+c.d},0),n=M.changes.length;
+  var scale=Math.max.apply(null,M.changes.map(function(c){return Math.max(c.d,SETUP_NORM)}));   // the longest of duration or norm fills the bar
   var rows=M.changes.map(function(c){
-    var n=Math.min(c.d,SETUP_NORM),o=Math.max(0,c.d-SETUP_NORM);
-    return '<div class="row"><div class="tm" style="color:var(--mu)">'+hm(c.a)+'–'+hm(c.b)+'</div>'+
-      '<div class="tpls"><i style="background:var(--tpl1)">'+c.from+'</i>→<i style="background:var(--tpl2)">'+c.to+'</i></div>'+
-      '<div class="nbar"><b style="width:'+n/mx*100+'%"></b>'+(o?'<b class="over" style="left:'+n/mx*100+'%;width:'+o/mx*100+'%"></b>':'')+'<em style="left:'+SETUP_NORM/mx*100+'%"></em></div>'+
-      '<div style="text-align:right"><b>'+c.d+' мин</b><div class="'+(o?'bad':'okc')+'" style="font-size:14.5px;font-weight:600">'+(o?'+'+o+' к норме':'в норме')+'</div></div></div>';
+    var o=Math.max(0,c.d-SETUP_NORM),w=function(m){return m/scale*100+'%'};
+    var bar=o?'<span class="cb-norm" style="width:'+w(SETUP_NORM)+'">норма '+SETUP_NORM+' мин</span><span class="cb-over" style="width:'+w(o)+'">+'+o+'</span>'
+             :'<span class="cb-norm" style="width:'+w(c.d)+'">'+c.d+' мин</span>'+(c.d<SETUP_NORM?'<span class="cb-left" style="width:'+w(SETUP_NORM-c.d)+'">запас '+(SETUP_NORM-c.d)+'</span>':'');
+    return '<div class="chg-row"><div class="chg-when"><div class="tpls"><i style="background:var(--tpl1)">'+c.from+'</i>→<i style="background:var(--tpl2)">'+c.to+'</i></div><span class="tm">'+hm(c.a)+'–'+hm(c.b)+'</span></div>'+
+      '<div class="chg-bar" role="img" aria-label="'+c.d+' мин при норме '+SETUP_NORM+(o?', превышение '+o:'')+'">'+bar+'</div>'+
+      '<div class="chg-res"><b>'+c.d+' мин</b><span class="'+(o?'bad':'okc')+'">'+(o?'+'+o+' сверх нормы':'в норме')+'</span></div></div>';
   }).join("");
-  return '<section class="card mb" data-tour="changeovers"><div class="ch"><h2>Переналадки за смену</h2><div class="r"><span class="ghost">норма '+SETUP_NORM+' мин</span>'+TBD+'</div>'+
-    '<div class="sub">Каждая смена шаблона: сколько длилась и насколько вышла за норму. Красное — превышение.</div></div>'+
-    '<div class="chg"><div class="tot"><div class="v">'+tot+' <small>мин</small></div><div class="l">'+M.changes.length+' '+plural(M.changes.length,"смена шаблона","смены шаблона","смен шаблона")+'</div>'+
-    '<div class="l '+(M.over?'bad':'okc')+'" style="font-weight:700">'+(M.over?'+'+M.over+' мин сверх нормы':'всё в норме')+'</div></div><div>'+rows+'</div></div></section>';
+  return '<section class="card mb" data-tour="changeovers"><div class="ch"><h2>Переналадки за смену</h2><div class="sub">Каждая смена шаблона против нормы. Красное — сколько минут сверх нормы.</div></div>'+
+    '<dl class="pr-side chg-stats"><div><dt>Переналадок</dt><dd>'+n+'</dd></div><div><dt>Всего</dt><dd>'+tot+' мин</dd></div>'+
+    '<div><dt>Сверх нормы</dt><dd class="'+(M.over?'bad':'okc')+'">'+(M.over?'+'+M.over+' мин':'нет')+'</dd></div><div><dt>Норма</dt><dd>'+SETUP_NORM+' мин</dd></div></dl>'+rows+'</section>';
 }
 
 // ---- shell ----
