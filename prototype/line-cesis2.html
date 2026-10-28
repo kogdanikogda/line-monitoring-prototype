@@ -29,7 +29,7 @@ svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .ctl button.on{background:#fff;color:#121519;font-weight:600}
 
 /* shell */
-.shell{display:grid;grid-template-columns:260px 1fr;gap:0;max-width:1520px;margin:0 auto;padding:14px;min-height:calc(100vh - 46px)}
+.shell{display:grid;grid-template-columns:290px 1fr;gap:0;max-width:1520px;margin:0 auto;padding:14px;min-height:calc(100vh - 46px)}
 .side{background:var(--side);border-radius:24px 0 0 24px;padding:22px 14px;display:flex;flex-direction:column;gap:4px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;padding:0 10px 18px}
 .logo b{width:34px;height:34px;border-radius:10px;background:var(--ink);color:var(--ink-tx);display:grid;place-items:center;font-size:16px}
@@ -47,7 +47,7 @@ svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .ibtn .ndot{position:absolute;top:10px;right:11px;width:9px;height:9px;border-radius:50%;background:var(--fault);border:2px solid var(--card)}
 .ava{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--ink-tx);display:grid;place-items:center;font-weight:700;font-size:15px}
 
-.ph{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 16px;margin-bottom:16px}
+.ph{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:16px}
 .ph .crumbs{color:var(--mu);font-size:14.5px;margin-bottom:2px}
 .ph h1{font-size:32px;margin:0;font-weight:800;letter-spacing:-.01em}
 .ph .meta{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
@@ -235,6 +235,32 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 
 /* demo strip extras */
 .demo-bar .right{margin-left:auto;display:flex;gap:8px}
+#app{container-type:inline-size;container-name:app}
+body.small{background:#CFD5D8}
+body.small #app{width:410px;height:calc(100vh - 92px);min-height:560px;margin:18px auto;border:10px solid #121519;border-radius:46px;overflow:hidden;transform:translateZ(0);background:var(--bg);box-shadow:0 24px 60px rgba(0,0,0,.25)}
+body.small .scr{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.mbtn{display:none;border:0;cursor:pointer}
+.mbk{display:none}
+#app.menu .side{transform:none}
+#app.noanim .side{transition:none}
+#app.menu .mbk{display:block;position:fixed;inset:0;background:rgba(10,14,18,.4);z-index:55}
+.side .sec{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);font-weight:700;padding:16px 14px 6px}
+.grp-h{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:650;font-size:15.5px;color:var(--tx);text-align:left}
+.grp-h:hover{background:var(--soft)}
+.grp-h small{display:block;color:var(--mu);font-weight:500;font-size:13.5px}
+.grp-h svg{width:16px;height:16px;transition:transform .2s;flex:none}
+.grp-h.cl svg{transform:rotate(-90deg)}
+.nl{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:9px 12px 9px 28px;border-radius:99px;cursor:pointer;font-size:15px;color:var(--tx);text-align:left}
+.nl:hover{background:var(--soft)}
+.nl.on{background:var(--ink);color:var(--ink-tx);font-weight:600}
+.nl .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nl .sw{font-size:12.5px;font-weight:600;white-space:nowrap}
+.nl.on .sw{color:rgba(255,255,255,.75)}
+.nl .dot{width:10px;height:10px}
+.nl.on .dot{box-shadow:0 0 0 2px var(--ink),0 0 0 3.5px rgba(255,255,255,.7)}
+button.nav{border:0;background:transparent;width:100%;text-align:left;cursor:pointer}
+.nav .cnt{margin-left:auto;background:var(--fault);color:#fff;border-radius:99px;font-size:12.5px;padding:1px 8px;font-weight:700}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#121519;color:#fff;border-radius:14px;padding:12px 18px;font-size:15px;z-index:120;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:calc(100vw - 32px)}
 .dbtn{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:99px;padding:6px 14px;cursor:pointer;font-size:14.5px;font-weight:600}
 .dbtn:hover{background:rgba(255,255,255,.14)}
 .ctl button{white-space:nowrap}.shl{display:none}
@@ -263,17 +289,23 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 #help .lg{display:grid;grid-template-columns:14px 1fr;gap:8px 10px;align-items:start;font-size:15.5px;color:var(--mu)}
 #help .lg i{width:14px;height:14px;border-radius:4px;margin-top:4px}
 
-@media(max-width:1100px){
-  .shell{grid-template-columns:1fr;padding:10px}.side{display:none}.main{padding:0;border-radius:0}
+@container app (max-width:1100px){
+  .shell{grid-template-columns:1fr;padding:10px}.main{padding:0;border-radius:0}
+  .side{position:fixed;left:0;top:0;bottom:0;width:min(310px,86%);z-index:60;border-radius:0 24px 24px 0;transform:translateX(-105%);transition:transform .25s ease;overflow-y:auto;box-shadow:8px 0 30px rgba(0,0,0,.15)}
+  .mbtn{display:grid}
   .kpis{grid-template-columns:1fr 1fr}.two,.tp{grid-template-columns:1fr}
   .chg .row{grid-template-columns:110px 1fr 1fr 100px}
 }
-/* phones: operator and foreman views must work from 360 px */
-@media(max-width:640px){
+/* demo strip on a real phone */
+@media(max-width:700px){
   .demo-bar{padding:8px 12px;gap:8px 10px;font-size:13.5px}.ctl>span{display:none}.ctl button{padding:5px 10px;font-size:13.5px}
   .demo-bar .right{margin-left:0}.lgl{display:none}.shl{display:inline}.dbtn{padding:5px 12px;font-size:13.5px}
+  .scrn{display:none!important}
+}
+/* phone layout: all roles must work from 360 px */
+@container app (max-width:640px){
   .shell{padding:8px}.search{display:none}.hm{display:none!important}
-  .ph h1{font-size:26px}.ph .meta{margin-left:0}
+  .ph h1{font-size:26px}.ph .meta{margin-left:0}.top{padding-bottom:12px}
   .card{padding:16px;border-radius:18px}.ch h2{font-size:18px}
   .kpis{grid-template-columns:1fr}.kpi .val{font-size:30px}
   .verdict{grid-template-columns:1fr}.vic{display:none}.verdict .head{font-size:20px}.verdict .why{font-size:16px}
@@ -298,6 +330,7 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 <div class="demo-bar">
   <span class="tag">Демо-данные</span>
   <div class="ctl" data-tour="demo"><span>Роль</span><div id="roles"></div></div>
+  <div class="ctl scrn"><span>Экран</span><div id="screens"></div></div>
   <div class="ctl"><span>Линия сейчас</span><div id="scens"></div></div>
   <div class="right"><button class="dbtn" data-tourstart="1">Тур по экрану</button><button class="dbtn" data-help="1" data-tour="help">Пояснения</button></div>
 </div>
@@ -332,7 +365,15 @@ function tplAt(m){return m<185?"12":"27"}
 
 var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Директор / собственник","ДР","Директор"]];
 var SCENS=[["run","Работает"],["stop","Станок стоит"],["nolink","Нет связи"]];
-var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null;
+var SCREENS=[["big","Большой"],["small","Телефон"]];
+// shop structure for the sidebar: unit -> lines/machines; state uses ST codes, -1 = switched off. Only Cesis 2 opens.
+var UNITS=[
+  {id:"weld",n:"Сварочный участок",items:[["Линия Цесис 2","cur"],["Линия Цесис 1",1],["Правка-отрезка СПО-1",3]]},
+  {id:"bend",n:"Гибочный участок",items:[["Гибочный ГС-1",6],["Гибочный ГС-2",-1]]}
+];
+var WORD={1:"",2:"стоп",3:"простой",4:"наладка",5:"перегрев",6:"авария",7:"авар. стоп",8:"простой",0:"нет данных","-1":"выключен"};
+var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="big",closedUnits={};
+try{screen=localStorage.getItem("cesis2-screen")||"big"}catch(x){}
 if(!ROLES.some(function(r){return r[0]==role}))role="foreman";
 
 // ---- icons (simple strokes) ----
@@ -352,7 +393,9 @@ var IC={
   play:'<path d="M8 5v14l11-7z"/>',
   swap:'<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
   target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
-  x:'<path d="M6 6l12 12M18 6 6 18"/>'
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  chev:'<path d="m6 9 6 6 6-6"/>',
+  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>'
 };
 function ic(n){return '<svg class="i" viewBox="0 0 24 24">'+IC[n]+'</svg>'}
 
@@ -569,16 +612,28 @@ function changeovers(M){
 }
 
 // ---- shell ----
+function sideHTML(){
+  var nav=function(icon,label,extra){return '<button class="nav" data-stub="1">'+ic(icon)+label+(extra||'')+'</button>'};
+  var h='<aside class="side" data-tour="side"><div class="logo"><b>Н</b>Нейропром</div>'+nav("grid","Обзор цеха")+'<div class="sec">Участки</div>';
+  UNITS.forEach(function(u){
+    var st=u.items.map(function(it){return it[1]=="cur"?M_.cur[2]:it[1]}),run=st.filter(function(k){return k==1}).length,cl=closedUnits[u.id];
+    h+='<button class="grp-h'+(cl?' cl':'')+'" data-unit="'+u.id+'">'+ic("chev")+'<span>'+u.n+'<small>'+run+' из '+st.length+' в работе</small></span></button>';
+    if(cl)return;
+    u.items.forEach(function(it,i){
+      var k=st[i],on=it[1]=="cur",col=k==-1?"#9A9A9A":cv(ST[k].c);
+      h+='<button class="nl'+(on?' on':'')+'"'+(on?' data-menu="close"':' data-stub="1"')+' title="'+(k==-1?"Выключен":ST[k].n)+'"><i class="dot" style="background:'+col+'"></i><span class="nm">'+it[0]+'</span>'+
+        (WORD[k]?'<span class="sw" style="color:'+(on?'':k==6||k==7?'var(--fault)':'var(--mu)')+'">'+WORD[k]+'</span>':'')+'</button>';
+    });
+  });
+  h+='<div class="navsep"></div>'+nav("bell","События",M_.untagged.length?'<span class="cnt">'+M_.untagged.length+'</span>':'')+nav("doc","Отчёты")+nav("gear","Настройки");
+  return h+'<div class="note">В прототипе открывается только «Линия Цесис 2». Остальные пункты показывают структуру цеха.</div></aside>';
+}
 function shell(content){
   var r=ROLES.filter(function(x){return x[0]==role})[0];
-  var nav=function(icon,label,on,sub){return '<div class="nav'+(sub?' subnav':'')+(on?' on':'')+'"'+(on?'':' title="В прототипе не работает"')+'>'+(sub?'':ic(icon))+label+'</div>'};
-  return '<div class="shell"><aside class="side"><div class="logo"><b>Н</b>Нейропром</div>'+
-    nav("grid","Обзор цеха")+nav("line","Линии и станки",true)+nav("","Линия Цесис 2",true,true)+nav("","Линия Цесис 1",false,true)+
-    nav("bell","События")+nav("doc","Отчёты")+'<div class="navsep"></div>'+nav("gear","Настройки")+
-    '<div class="note">Работает только экран «Линия Цесис 2». Остальные пункты — для показа структуры.</div></aside>'+
-    '<main class="main"><div class="top"><div class="search">'+ic("search")+'Поиск станка или события</div><span class="sp"></span>'+
+  return '<div class="shell">'+sideHTML()+
+    '<main class="main"><div class="top"><button class="ibtn mbtn" data-menu="open" data-tour="side" aria-label="Меню">'+ic("menu")+'</button><div class="search">'+ic("search")+'Поиск станка или события</div><span class="sp"></span>'+
     '<span class="ibtn">'+ic("bell")+(M_.untagged.length?'<span class="ndot"></span>':'')+'</span><span class="ava" title="'+r[1]+'">'+r[2]+'</span></div>'+
-    '<div class="ph"><div><div class="crumbs">Линии и станки › Линия Цесис 2</div><h1>Линия Цесис 2</h1></div><div class="meta">'+
+    '<div class="ph"><h1>Линия Цесис 2</h1><div class="meta">'+
     statusPill(M_)+'<span class="pill">Смена <b>08:00–20:00</b></span></div></div>'+
     stale()+content+'<div class="foot">Данные демонстрационные: сценарий смены собран по ТЗ и карте сигналов линии. В рабочей версии данные приходят с ПЛК линии через сборщик данных.</div></main></div>';
 }
@@ -624,6 +679,7 @@ function helpHTML(){
   '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки.</li>'+
   '<li><b>Начальник участка</b> — что требует действия сейчас: остановки без причины, переналадки сверх нормы, журнал событий.</li>'+
   '<li><b>Директор / собственник</b> — итог смены, куда ушло время, выпуск по шаблонам.</li></ul>'+
+  '<p>Переключатель «Экран» показывает каждую роль на большом экране и на телефоне. На телефоне навигация по цеху открывается кнопкой ☰.</p>'+
   '<p>Переключатель «Линия сейчас» в верхней полосе показывает, как экран выглядит, когда линия стоит и когда пропала связь. Время обновления видно только при устаревших данных.</p>'+
   '<h3>Цвета состояний</h3><div class="lg">'+lg+'</div>'+
   '<h3>Метки</h3><ul><li><span class="src">ПЛК</span> — состояние и причину определил контроллер линии автоматически.</li>'+
@@ -633,7 +689,7 @@ function helpHTML(){
   '<li><span class="tbd">оценка</span> — потери в картах посчитаны как минуты простоя × средний темп шаблона.</li></ul>'+
   '<h3>Что вымышлено</h3><ul><li>Все цифры смены: записанных данных с линии пока нет, есть только карта сигналов ПЛК.</li>'+
   '<li>План 520 карт за смену и норма переналадки 20 минут.</li><li>Список причин для оператора — черновой, уточняется с производством.</li>'+
-  '<li>Пункты меню кроме «Линия Цесис 2» не работают — показывают структуру продукта.</li></ul>'+
+  '<li>Участки, линии и станки в меню кроме «Линия Цесис 2» и их статусы — для показа структуры, не открываются.</li></ul>'+
   '<h3>Открытые вопросы</h3><ul><li>Откуда берётся план смены и кто его утверждает.</li><li>Норма времени на переналадку.</li>'+
   '<li>Названия шаблонов №12 и №27.</li><li>«Обрыв прутка / проволоки» и «заедание прутка» — одна причина или две.</li>'+
   '<li>Устройство оператора: телефон или планшет / экран на стойке у линии.</li><li>Как часто сборщик данных опрашивает ПЛК: при редком опросе короткие остановки теряются.</li></ul></div>';
@@ -642,7 +698,7 @@ function helpHTML(){
 // ---- guided tour: dim the page, highlight one block, explain it ----
 var TOURS={
   op:[
-    ["demo","Это прототип на демо-данных","Здесь переключаются роль и состояние линии. Сейчас — экран оператора у линии. Цифры вымышлены."],
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль, размер экрана (большой или телефон) и состояние линии. Цифры вымышлены."],
     ["status","Состояние линии","Видно издалека: цвет и одно слово. Ниже — сколько длится и какой шаблон в работе."],
     ["reasons","Линия встала — укажите причину","Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
     ["unt","Прошлые остановки без причины","Если причину не указали сразу, она ждёт здесь. Минуты сразу попадают в отчёт начальника участка."],
@@ -651,7 +707,8 @@ var TOURS={
     ["help","Пояснения","Что значат цвета и метки, что вымышлено и какие вопросы открыты. Тур можно пройти заново кнопкой «Тур по экрану»."]
   ],
   foreman:[
-    ["demo","Это прототип на демо-данных","Здесь переключаются роль и состояние линии. Сейчас — экран начальника участка. Цифры вымышлены."],
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль, размер экрана (большой или телефон) и состояние линии. Цифры вымышлены."],
+    ["side","Навигация по цеху","Участки → линии и станки. У каждого агрегата точка статуса, проблемные подписаны словом. Чёрная строка — где вы сейчас. На телефоне меню открывается кнопкой ☰."],
     ["now","Что требует действия","Состояние линии и то, что нужно сделать: указать причины остановок, разобрать переналадку сверх нормы."],
     ["timeline","Лента смены","Пункт 1 ТЗ: работа, стоп, пауза, аварии по времени. Нажмите на участок — покажет время и причину."],
     ["templates","Выпуск по шаблонам","Пункт 2 ТЗ: какой шаблон работал и сколько карт на нём сделано."],
@@ -661,7 +718,8 @@ var TOURS={
     ["help","Пояснения","Что значат цвета и метки, что вымышлено и какие вопросы открыты. Тур можно пройти заново кнопкой «Тур по экрану»."]
   ],
   boss:[
-    ["demo","Это прототип на демо-данных","Здесь переключаются роль и состояние линии. Сейчас — экран директора. Цифры вымышлены."],
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль, размер экрана (большой или телефон) и состояние линии. Цифры вымышлены."],
+    ["side","Навигация по цеху","Участки → линии и станки. У каждого агрегата точка статуса, проблемные подписаны словом. Чёрная строка — где вы сейчас. На телефоне меню открывается кнопкой ☰."],
     ["verdict","Итог смены одной строкой","Сколько сделано против графика, прогноз к концу смены и главные потери."],
     ["timeline","Лента смены","Работа, стоп, пауза, аварии по времени. Нажмите на участок — покажет время и причину."],
     ["templates","Выпуск по шаблонам","Какой шаблон работал и сколько карт на нём сделано."],
@@ -671,7 +729,11 @@ var TOURS={
   ]
 };
 var tour=null;
-function tourEl(key){return document.querySelector('[data-tour="'+key+'"]')}
+function tourEl(key){   // several elements may carry one key (sidebar on big screen, menu button on phone): take the visible one
+  var a=document.querySelectorAll('[data-tour="'+key+'"]');
+  for(var i=0;i<a.length;i++){var r=a[i].getBoundingClientRect();if(r.width>0&&r.right>0)return a[i]}
+  return null;
+}
 function startTour(){
   closeHelp();
   tour={steps:TOURS[role],i:0};
@@ -687,7 +749,7 @@ function showStep(i){
   if(!tourEl(st[0])){showStep(i+(i>=tour.i?1:-1));return}   // block not on this screen — skip it
   tour.i=i;
   var el=tourEl(st[0]),tip=document.querySelector("#tour .tip");
-  if(el.closest(".demo-bar"))window.scrollTo(0,0);else el.scrollIntoView({block:"center"});
+  if(el.closest(".demo-bar"))window.scrollTo(0,0);else if(!el.closest(".side,.top"))el.scrollIntoView({block:"center"});else{window.scrollTo(0,0);var sc=document.querySelector(".scr");if(sc)sc.scrollTop=0}
   tip.innerHTML='<h3>'+st[1]+'</h3><p>'+st[2]+'</p><div class="bar2"><span class="cnt">'+(i+1)+' из '+tour.steps.length+'</span>'+
     (i?'<button class="btn lt" data-tstep="-1">Назад</button>':'<button class="btn lt" data-tend="1">Пропустить</button>')+
     '<button class="btn" data-tstep="1">'+(i==tour.steps.length-1?'Готово':'Далее')+'</button></div>';
@@ -711,20 +773,28 @@ function closeHelp(){$("help").classList.remove("open")}
 var M_;
 function render(){
   M_=model();
-  $("app").innerHTML=role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_);
+  var keep=document.querySelector(".scr"),top=keep?keep.scrollTop:0;
+  $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>';
+  if(screen=="small")document.querySelector(".scr").scrollTop=top;
+  document.body.classList.toggle("small",screen=="small"&&innerWidth>=700);
+  $("screens").innerHTML=SCREENS.map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("");
   $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
 }
 document.addEventListener("click",function(e){
   var seg=e.target.closest(".tl .seg");
   if(seg&&!tour){selSeg=+seg.dataset.i===selSeg?null:+seg.dataset.i;render();return}
-  var b=e.target.closest("button,[data-help]");if(!b)return;
+  var b=e.target.closest("button,[data-help],[data-menu]");if(!b)return;
   var d=b.dataset;
+  if(d.menu){$("app").classList.toggle("menu",d.menu=="open");return}
+  if(d.stub){toast("В прототипе открывается только «Линия Цесис 2»");return}
+  if(d.unit){closedUnits[d.unit]=!closedUnits[d.unit];render();return}
   if(d.tstep){showStep(tour.i+(+d.tstep));return}
   if(d.tend){endTour();return}
   if(d.tourstart){startTour();return}
   if(d.help){$("help").classList.contains("open")?closeHelp():openHelp();return}
-  if(d.role){role=d.role;try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
+  if(d.screen){screen=d.screen;try{localStorage.setItem("cesis2-screen",screen)}catch(x){}var ap=$("app");ap.classList.remove("menu");ap.classList.add("noanim");render();setTimeout(function(){ap.classList.remove("noanim")},60);window.scrollTo(0,0);return}
+  if(d.role){role=d.role;$("app").classList.remove("menu");try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
   else if(d.scen){scen=d.scen;openTag=null;selSeg=null}
   else if(d.tag){tags[+d.start]=d.tag;openTag=null}
   else if(d.untag){delete tags[+d.untag]}
@@ -739,7 +809,9 @@ document.addEventListener("keydown",function(e){
   else if(e.key=="Escape")closeHelp();
 });
 addEventListener("resize",placeTour);
-addEventListener("scroll",placeTour,{passive:true});
+addEventListener("scroll",placeTour,{passive:true,capture:true});
+var toastT;
+function toast(t){var el=$("toast");if(!el){el=document.createElement("div");el.id="toast";document.body.appendChild(el)}el.textContent=t;el.style.display="block";clearTimeout(toastT);toastT=setTimeout(function(){el.style.display="none"},2200)}
 render();
 // first visit: start the tour once
 var seen=false;try{seen=localStorage.getItem("cesis2-tour")=="1";localStorage.setItem("cesis2-tour","1")}catch(x){}
