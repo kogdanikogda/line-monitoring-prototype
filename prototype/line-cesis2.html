@@ -207,48 +207,131 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 .nbar b.over{background:var(--fault);border-radius:0 7px 7px 0}
 .nbar em{position:absolute;top:-5px;bottom:-5px;width:3px;border-radius:2px;background:var(--tx)}
 
+/* round 3: tap instead of hover, operator list, templates, tour, help */
+.op{max-width:960px}
+.status>div{min-width:0}
+.status .big{overflow-wrap:anywhere}
+.tl .seg{cursor:pointer}
+.tl .seg.sel{outline:3px solid var(--tx);outline-offset:-3px;z-index:2;filter:brightness(1.1)}
+.pill .dot{width:10px;height:10px}
+.now-list .it{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:17px;flex-wrap:wrap}
+.now-list .it:first-child{border-top:0;padding-top:0}
+.now-list .it .ic{width:44px;height:44px}
+.now-list .it .ic svg{width:22px;height:22px}
+.now-list .it .t{flex:1;min-width:200px}
+.now-list .it .t small{display:block;color:var(--mu);font-size:14.5px}
+.unt-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 0;border-top:1px solid var(--line);font-size:18px}
+.unt-row:first-of-type{border-top:0}
+.unt-row .tm{color:var(--mu);font-variant-numeric:tabular-nums}
+.unt-row .btn{margin-left:auto;font-size:16px;padding:10px 18px}
+.unt-row .reasons{flex-basis:100%}
+.reasons.sm .rbtn{min-height:64px;font-size:17px;background:var(--inner);box-shadow:none}
+.tplc{display:flex;gap:16px;align-items:center;padding:16px;border-radius:16px;background:var(--inner)}
+.tplc .n{font-size:30px;font-weight:800;line-height:1.1}
+.tplc .n small{font-size:16px;font-weight:500;color:var(--mu)}
+.tplc .l{font-size:15px;color:var(--mu)}
+.vic.neu{background:var(--soft);color:var(--tx)}
+
+/* demo strip extras */
+.demo-bar .right{margin-left:auto;display:flex;gap:8px}
+.dbtn{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:99px;padding:6px 14px;cursor:pointer;font-size:14.5px;font-weight:600}
+.dbtn:hover{background:rgba(255,255,255,.14)}
+.ctl button{white-space:nowrap}.shl{display:none}
+
+/* guided tour */
+#tour{position:fixed;inset:0;z-index:100}
+#tour .catch{position:absolute;inset:0}
+#tour .spot{position:fixed;border-radius:18px;box-shadow:0 0 0 9999px rgba(10,14,18,.7);transition:all .25s ease;pointer-events:none}
+#tour .tip{position:fixed;width:min(400px,calc(100vw - 24px));background:var(--card);border-radius:18px;padding:18px 20px;box-shadow:0 12px 40px rgba(0,0,0,.28);transition:top .25s ease,left .25s ease}
+#tour .tip h3{margin:0 0 6px;font-size:19px}
+#tour .tip p{margin:0 0 16px;font-size:16px;color:var(--mu)}
+#tour .tip .bar2{display:flex;align-items:center;gap:8px}
+#tour .tip .cnt{color:var(--mu);font-size:14px;margin-right:auto}
+
+/* help drawer */
+#help{position:fixed;inset:0;z-index:90;display:none}
+#help.open{display:block}
+#help .bk{position:absolute;inset:0;background:rgba(10,14,18,.45)}
+#help .pnl{position:absolute;right:0;top:0;bottom:0;width:min(540px,100vw);background:var(--card);overflow:auto;padding:22px 24px 40px;box-shadow:-8px 0 30px rgba(0,0,0,.15)}
+#help .hd{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+#help h2{font-size:24px;margin:0;flex:1}
+#help h3{font-size:17px;margin:24px 0 8px}
+#help p,#help li{font-size:15.5px;color:var(--mu);margin:6px 0}
+#help b{color:var(--tx)}
+#help ul{padding-left:20px;margin:6px 0}
+#help .lg{display:grid;grid-template-columns:14px 1fr;gap:8px 10px;align-items:start;font-size:15.5px;color:var(--mu)}
+#help .lg i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+
 @media(max-width:1100px){
   .shell{grid-template-columns:1fr;padding:10px}.side{display:none}.main{padding:0;border-radius:0}
   .kpis{grid-template-columns:1fr 1fr}.two,.tp{grid-template-columns:1fr}
+  .chg .row{grid-template-columns:110px 1fr 1fr 100px}
+}
+/* phones: operator and foreman views must work from 360 px */
+@media(max-width:640px){
+  .demo-bar{padding:8px 12px;gap:8px 10px;font-size:13.5px}.ctl>span{display:none}.ctl button{padding:5px 10px;font-size:13.5px}
+  .demo-bar .right{margin-left:0}.lgl{display:none}.shl{display:inline}.dbtn{padding:5px 12px;font-size:13.5px}
+  .shell{padding:8px}.search{display:none}.hm{display:none!important}
+  .ph h1{font-size:26px}.ph .meta{margin-left:0}
+  .card{padding:16px;border-radius:18px}.ch h2{font-size:18px}
+  .kpis{grid-template-columns:1fr}.kpi .val{font-size:30px}
+  .verdict{grid-template-columns:1fr}.vic{display:none}.verdict .head{font-size:20px}.verdict .why{font-size:16px}
+  .axis .odd{display:none}
+  .tr{grid-template-columns:1fr auto;gap:6px 10px}.tr.th{display:none}.tr .c{display:none}.tr .tm{grid-column:1/-1}.tr .cause{grid-column:1/-1}
+  .chg{grid-template-columns:1fr}.chg .tot{border-right:0;padding-right:0;border-bottom:1px solid var(--line);padding-bottom:12px}
+  .chg .row{grid-template-columns:1fr auto;gap:8px}.chg .row .nbar{grid-column:1/-1}
+  .loss{grid-template-columns:1fr 96px}.loss .bar{grid-column:1/-1;grid-row:2}
+  .donut{grid-template-columns:1fr;justify-items:center}.donut ul{width:100%}
+  .alert{flex-wrap:wrap}.alert .btn{margin-left:0}
+  .op{padding:12px 12px 32px}.op .top{flex-wrap:wrap;gap:8px}.op .top h1{font-size:22px;width:100%}
+  .status{padding:20px;gap:14px;border-radius:20px}.status .ring{display:none}.status .big{font-size:40px}.status .for{font-size:18px}
+  .ask h2{font-size:22px}.reasons{grid-template-columns:1fr 1fr;gap:8px}.rbtn{min-height:68px;font-size:17px}
+  .prog .num{font-size:56px}.prog .of{font-size:22px}.prog-line{font-size:17px}
+  .tl{height:48px}.tpl .seg{font-size:13px;padding-left:6px}
+  .unt-row .btn{margin-left:0;width:100%}
+  .tplc .n{font-size:26px}
 }
 </style>
 </head>
 <body>
 <div class="demo-bar">
   <span class="tag">Демо-данные</span>
-  <div class="ctl"><span>Роль</span><div id="roles"></div></div>
+  <div class="ctl" data-tour="demo"><span>Роль</span><div id="roles"></div></div>
   <div class="ctl"><span>Линия сейчас</span><div id="scens"></div></div>
+  <div class="right"><button class="dbtn" data-tourstart="1">Тур по экрану</button><button class="dbtn" data-help="1" data-tour="help">Пояснения</button></div>
 </div>
 <div id="app"></div>
+<div id="help"></div>
 
 <script>
 // ---- demo scenario (minutes from 08:00) ----
-var T0=480, SH=720, NOW=700, PLAN=520, SETUP_NORM=20; // SETUP_NORM: demo value, real norm to be confirmed
-// states follow the signal map of the line (priority order there); "src": who knows the reason, "unconf": rule not yet checked on the line
+var T0=480, SH=720, NOW=700, PLAN=520, SETUP_NORM=20; // PLAN and SETUP_NORM: demo values, real ones to be confirmed
+// states follow the signal map of the line (priority order there); "unconf": rule not yet checked on the line
 var ST={
-  0:{n:"Нет данных",          big:"НЕТ ДАННЫХ",     lc:"нет данных",            c:"--nodata",g:null},
-  1:{n:"Работа",              big:"РАБОТАЕТ",       lc:"работа",                c:"--ok",    g:null},
-  2:{n:"Стоп",                big:"СТОП",           lc:"стопы без причины",     c:"--idle",  g:"Причина не указана"},
-  3:{n:"Пауза",               big:"ПАУЗА",          lc:"паузы",                 c:"--pause", g:"Материал", unconf:true},
-  8:{n:"Ожидание материала",  big:"ЖДЁМ МАТЕРИАЛ",  lc:"ожидание материала",    c:"--wait",  g:"Материал", unconf:true},
-  4:{n:"Переналадка",         big:"ПЕРЕНАЛАДКА",    lc:"переналадка",           c:"--setup", g:"Плановое"},
-  5:{n:"Тепловая защита",     big:"ПЕРЕГРЕВ",       lc:"тепловая защита",       c:"--heat",  g:"Предупреждения"},
-  6:{n:"Авария привода",      big:"АВАРИЯ",         lc:"авария привода",        c:"--fault", g:"Аварии"},
-  7:{n:"Аварийный стоп",      big:"АВАРИЙНЫЙ СТОП", lc:"аварийный стоп",        c:"--estop", g:"Аварии"}
+  0:{n:"Нет данных",          big:"НЕТ ДАННЫХ",     lc:"нет данных",            c:"--nodata",g:null,            d:"Обрыв связи с ПЛК. Не простой: в потери и «% в работе» не входит."},
+  1:{n:"Работа",              big:"РАБОТАЕТ",       lc:"работа",                c:"--ok",    g:null,            d:"Линия выпускает карты."},
+  2:{n:"Стоп",                big:"СТОП",           lc:"стопы без причины",     c:"--idle",  g:"Причина не указана", d:"Нажата кнопка «Стоп». Почему — знает только оператор, поэтому его просят указать причину."},
+  3:{n:"Пауза",               big:"ПАУЗА",          lc:"паузы",                 c:"--pause", g:"Материал", unconf:true, d:"Линия ждёт поперечную заготовку. Определяется по сигналам ПЛК, правило ещё проверяется."},
+  8:{n:"Ожидание материала",  big:"ЖДЁМ МАТЕРИАЛ",  lc:"ожидание материала",    c:"--wait",  g:"Материал", unconf:true, d:"Нет заготовки дольше 20 секунд. Гипотеза, проверяется на линии."},
+  4:{n:"Переналадка",         big:"ПЕРЕНАЛАДКА",    lc:"переналадка",           c:"--setup", g:"Плановое",      d:"Смена шаблона. Плановая работа, но считается против нормы: превышение — потеря."},
+  5:{n:"Тепловая защита",     big:"ТЕПЛОВАЯ ЗАЩИТА",lc:"тепловая защита",       c:"--heat",  g:"Предупреждения",d:"Сработала тепловая защита контактора. Показывается как предупреждение, а не авария."},
+  6:{n:"Авария привода",      big:"АВАРИЯ",         lc:"авария привода",        c:"--fault", g:"Аварии",        d:"Авария сервопривода или преобразователя частоты."},
+  7:{n:"Аварийный стоп",      big:"АВАРИЙНЫЙ СТОП", lc:"аварийный стоп",        c:"--estop", g:"Аварии",        d:"Нажата кнопка аварийного останова."}
 };
 var ORDER=[1,2,3,8,4,5,6,7,0];
 var BASE=[[0,95,1],[95,102,3],[102,170,1],[170,185,2],[185,215,4],[215,300,1],[300,318,6],[318,330,0],[330,400,1],[400,420,2],[420,505,1],[505,512,5],[512,600,1],[600,606,8],[606,700,1]];
-var why={0:"Обрыв связи с ПЛК — не простой",3:"Нет поперечной заготовки",8:"Нет заготовки дольше 20 с",2:"Нажата кнопка «Стоп»",4:"Смена шаблона №12 → №27",6:"Авария сервопривода каретки 2",5:"Перегрев контактора К4 (предупреждение)"};
-var TPLS=[[0,185,"№12","--tpl1"],[185,215,"Наладка","--setup"],[215,700,"№27","--tpl2"]];
-// reasons the PLC cannot see — the operator picks them (list from the signal map, to be confirmed with the plant); third value: planned, not a loss
-var REASONS=[["Заедание прутка","Оборудование"],["Замена бунта","Материал"],["Логистика","Материал"],["Брак сварки / ручная правка","Качество"],["Нет оператора","Персонал"],["Обед / перерыв","Плановое",true],["Другое","Прочее"]];
+var why={0:"Обрыв связи с ПЛК — не простой",3:"Нет поперечной заготовки",8:"Нет заготовки дольше 20 с",2:"Нажата кнопка «Стоп»",4:"Смена шаблона №12 → №27",6:"Авария сервопривода каретки 2",5:"Сработала тепловая защита: перегрев контактора К4"};
+var TPLS=[[0,185,"№12","--tpl1"],[185,215,"","--setup"],[215,700,"№27","--tpl2"]];
+// reasons the PLC cannot see — the operator picks them (list to be confirmed with the plant); third value: planned, not a loss
+var REASONS=[["Обрыв прутка / проволоки","Оборудование"],["Заедание прутка","Оборудование"],["Замена бунта","Материал"],["Логистика","Материал"],["Брак сварки / ручная правка","Качество"],["Нет оператора","Персонал"],["Обед / перерыв","Плановое",true],["Другое","Прочее"]];
 var GROUPS=["Аварии","Предупреждения","Оборудование","Материал","Качество","Персонал","Прочее","Причина не указана","Плановое"];
-var R12=142/163, R27=318/434;           // cards per working minute
+var R12=142/163, R27=318/434;           // cards per minute while the line runs
 function rateAt(m){return m<185?R12:R27}
+function tplAt(m){return m<185?"12":"27"}
 
-var ROLES=[["op","Оператор","ОП"],["foreman","Начальник участка","НУ"],["boss","Директор / собственник","ДР"]];
+var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Директор / собственник","ДР","Директор"]];
 var SCENS=[["run","Работает"],["stop","Станок стоит"]];
-var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all";
+var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null;
 if(!ROLES.some(function(r){return r[0]==role}))role="foreman";
 
 // ---- icons (simple strokes) ----
@@ -256,42 +339,46 @@ var IC={
   box:'<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
   speed:'<path d="M4 16a8 8 0 1 1 16 0"/><path d="m12 16 4-5"/><circle cx="12" cy="16" r="1.2"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  pause:'<circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/>',
   warn:'<path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17.5v.01"/>',
   check:'<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/>',
   grid:'<rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/>',
   line:'<path d="M3 17h18M5 17V9l4 3V9l4 3V9l4 3v5"/>',
   bell:'<path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
   doc:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
-  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
   gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
   search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
   stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',
   play:'<path d="M8 5v14l11-7z"/>',
-  swap:'<path d="M4 8h13l-3-3M20 16H7l3 3"/>'
+  swap:'<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>'
 };
-function ic(n,cls){return '<svg class="i'+(cls?' '+cls:'')+'" viewBox="0 0 24 24">'+IC[n]+'</svg>'}
+function ic(n){return '<svg class="i" viewBox="0 0 24 24">'+IC[n]+'</svg>'}
 
 function $(id){return document.getElementById(id)}
 function cv(n){return "var("+n+")"}
 function hm(m){var t=T0+m;return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")}
 function dur(m){var h=Math.floor(m/60);return h?h+" ч "+(m%60)+" мин":m+" мин"}
 function pct(m){return m/SH*100}
+function plural(n,a,b,c){var m=n%10,mm=n%100;return m==1&&mm!=11?a:m>=2&&m<=4&&(mm<12||mm>14)?b:c}
 function reasonInfo(r){return REASONS.filter(function(x){return x[0]==r})[0]}
 function segGroup(s){var t=s[2]==2&&tags[s[0]];return t?reasonInfo(t)[1]:ST[s[2]].g}
 function srcHTML(st,tag){if(st==0)return "";return (tag?'<span class="src opr">Оператор</span>':'<span class="src">ПЛК</span>')+(!tag&&ST[st].unconf?' <span class="tbd">не подтверждено</span>':'')}
-var TBD=' <span class="tbd">демо, уточняется</span>';
+var TBD=' <span class="tbd">демо, уточняется</span>', EST=' <span class="tbd">оценка</span>';
 
 // ---- model: everything is derived from the segments and the operator's tags ----
 function model(){
   var seg=BASE.map(function(s){return s.slice()});
   if(scen=="stop"){seg[seg.length-1]=[606,685,1];seg.push([685,700,2])}
-  var M={seg:seg,work:0,done:0,nodata:0,items:{},byState:{}};
+  var M={seg:seg,work:0,done:0,nodata:0,items:{},byState:{},tpl:{"12":{work:0,nd:0,cards:0},"27":{work:0,nd:0,cards:0}}};
   seg.forEach(function(s){
     var d=s[1]-s[0];
     M.byState[s[2]]=(M.byState[s[2]]||0)+d;
-    if(s[2]==1){M.work+=d;M.done+=d*rateAt(s[0]);return}
-    if(s[2]==0){M.nodata+=d;M.done+=d*rateAt(s[0]);return}   // PLC card counter catches up after the link is back
+    if(s[2]==1||s[2]==0){     // during "no data" the PLC card counter keeps counting and catches up after the link is back
+      var t=M.tpl[tplAt(s[0])];t.cards+=d*rateAt(s[0]);M.done+=d*rateAt(s[0]);
+      if(s[2]==1){M.work+=d;t.work+=d}else{M.nodata+=d;t.nd+=d}
+      return;
+    }
     var tag=s[2]==2?tags[s[0]]:null,ri=tag&&reasonInfo(tag);
     var key=s[2]==2?(tag?"t:"+tag:"s2"):"s"+s[2];
     var it=M.items[key]||(M.items[key]={key:key,st:s[2],label:tag||ST[s[2]].n,min:0,cards:0,
@@ -299,6 +386,7 @@ function model(){
     it.min+=d;it.cards+=d*rateAt(s[0]);
   });
   M.done=Math.round(M.done);
+  M.tpl["12"].n=Math.round(M.tpl["12"].cards);M.tpl["27"].n=M.done-M.tpl["12"].n;
   M.list=Object.keys(M.items).map(function(k){var it=M.items[k];
     it.lost=it.st==4?Math.max(0,it.min-SETUP_NORM):(it.planned?0:it.min);
     it.lostCards=it.cards*it.lost/it.min;return it});
@@ -311,10 +399,11 @@ function model(){
   M.known=NOW-M.nodata;
   M.util=Math.round(M.work/M.known*100);
   M.changes=seg.filter(function(s){return s[2]==4}).map(function(s){return {a:s[0],b:s[1],d:s[1]-s[0],from:"№12",to:"№27"}});
+  M.over=M.changes.reduce(function(a,c){return a+Math.max(0,c.d-SETUP_NORM)},0);
   M.cur=seg[seg.length-1];
   M.curDur=NOW-M.cur[0];
   M.untagged=seg.filter(function(s){return s[2]==2&&!tags[s[0]]});
-  // per hour: what was made and what could have been made without stops
+  M.present=ORDER.filter(function(k){return M.byState[k]});
   M.hours=[];
   for(var h=0;h<12;h++){
     var a=h*60,b=Math.min(a+60,NOW),fact=0,cap=0;
@@ -326,46 +415,75 @@ function model(){
 
 // ---- blocks ----
 function lc(it){return it.st==2&&it.key!="s2"?it.label.toLowerCase():ST[it.st].lc}
-function verdict(M){
-  var behind=M.gap>0;
-  var head=behind?"Отстаём от плана на "+M.gap+" карт. К концу смены ждём ≈ "+M.forecast+" из "+PLAN+" ("+Math.round(M.forecast/PLAN*100)+"%)."
-                 :"Идём по плану: сделано "+M.done+" из "+PLAN+".";
+function statusPill(M){
+  var c=M.cur;
+  return '<span class="pill"><i class="dot" style="background:'+cv(ST[c[2]].c)+'"></i><b>'+(c[2]==1?"Работает":ST[c[2]].n)+'</b> '+dur(M.curDur)+'</span>';
+}
+function lossesLine(M){
   var top=M.list.filter(function(i){return i.lost>0}).sort(function(a,b){return b.lost-a.lost}),w="";
   if(top.length>1)w="Главные потери: <b>"+lc(top[0])+" "+top[0].lost+" мин</b>"+(top[0].key=="s2"?" (причина не указана)":"")+" и <b>"+lc(top[1])+" "+top[1].lost+" мин</b>. ";
-  w+="Переналадка — <b>"+M.setup+" мин</b> при норме "+SETUP_NORM+(M.setup>SETUP_NORM?" (+"+(M.setup-SETUP_NORM)+")":"")+". Неплановых простоев — "+dur(M.unplanned)+".";
-  var c=M.cur;
-  return '<section class="card verdict mb"><div class="vic" style="'+(behind?'':'background:color-mix(in srgb,var(--ok) 16%,var(--card));color:var(--ok)')+'">'+ic(behind?"warn":"check")+'</div><div>'+
-    '<div class="now"><span class="dot" style="background:'+cv(ST[c[2]].c)+'"></span>'+(c[2]==1?"Сейчас работает":"Сейчас: "+ST[c[2]].n.toLowerCase())+' · '+dur(M.curDur)+' · шаблон №27</div>'+
-    '<div class="head">'+head+'</div><div class="why">'+w+'</div></div></section>';
+  return w+"Переналадка — <b>"+M.setup+" мин</b> при норме "+SETUP_NORM+(M.over?" (+"+M.over+")":"")+".";
+}
+// director: the result of the shift in one line
+function verdict(M){
+  var head="К 19:40 сделано "+M.done+" карт при графике "+M.planNow+(M.gap>0?" (−"+M.gap+")":"")+". Прогноз к концу смены ≈ "+M.forecast+" из "+PLAN+".";
+  return '<section class="card verdict mb" data-tour="verdict"><div class="vic neu">'+ic("target")+'</div><div>'+
+    '<div class="head">'+head+'</div><div class="why">'+lossesLine(M)+' План'+TBD+'</div></div></section>';
+}
+// foreman: what needs action right now
+function nowCard(M){
+  var c=M.cur,items=[];
+  items.push('<div class="it"><span class="ic" style="--c:'+cv(ST[c[2]].c)+'">'+ic(c[2]==1?"play":"stop")+'</span><div class="t"><b>'+(c[2]==1?"Линия работает":"Линия стоит: "+ST[c[2]].n.toLowerCase())+'</b> · '+dur(M.curDur)+'<small>шаблон №27 · сделано '+M.done+' карт, по графику '+M.planNow+'</small></div></div>');
+  if(M.untagged.length){
+    var min=M.untagged.reduce(function(a,s){return a+s[1]-s[0]},0);
+    items.push('<div class="it"><span class="ic" style="--c:var(--pause)">'+ic("warn")+'</span><div class="t"><b>Нужно указать причину: '+M.untagged.length+' '+plural(M.untagged.length,"остановка","остановки","остановок")+' ('+min+' мин)</b><small>Без причины эти минуты не отнести ни к оборудованию, ни к материалу.</small></div><button class="btn" data-filter="Причина не указана" data-jump="1">Показать</button></div>');
+  }
+  if(M.over)items.push('<div class="it"><span class="ic" style="--c:var(--setup)">'+ic("swap")+'</span><div class="t"><b>Переналадка превысила норму на '+M.over+' мин</b><small>'+M.setup+' мин при норме '+SETUP_NORM+'</small></div></div>');
+  return '<section class="card now-list mb" data-tour="now"><div class="ch"><h2>Сейчас на линии</h2></div>'+items.join("")+'</section>';
 }
 function kpi(icon,color,val,lbl,foot,extra){
   return '<div class="card kpi"><div class="row"><span class="ic" style="--c:'+cv(color)+'">'+ic(icon)+'</span><div><div class="val">'+val+'</div><div class="lbl">'+lbl+'</div></div></div>'+(extra||'')+'<div class="foot">'+foot+'</div></div>';
 }
 function kpis(M){
   var ph=PLAN/12;
-  return '<div class="grid kpis mb" style="margin-bottom:16px">'+
+  return '<div class="grid kpis" data-tour="kpis">'+
    kpi("box","--ok",M.done+' <small>из '+PLAN+'</small>',"Выпущено карт",
      '<span class="delta '+(M.gap>0?'bad':'okc')+'">'+(M.gap>0?'↘ −'+M.gap:'↗ +'+(-M.gap))+'</span> к графику на 19:40 · план'+TBD,
      '<div class="track"><i style="width:'+M.done/PLAN*100+'%"></i><em style="left:'+M.planNow/PLAN*100+'%"></em></div>')+
    kpi("speed","--blue-d",M.perHour.toFixed(0)+' <small>карт/час</small>',"Темп",
      '<span class="delta '+(M.perHour<ph?'bad':'okc')+'">'+(M.perHour<ph?'↘ ':'↗ ')+(M.perHour-ph).toFixed(0)+'</span> к плану '+ph.toFixed(0)+' карт/час')+
    kpi("clock","--ok",M.util+'%',"Время в работе",
-     dur(M.work)+' из '+dur(M.known)+(M.nodata?' · '+M.nodata+' мин без данных не считаем':''))+
+     dur(M.work)+' из '+dur(M.known)+(M.nodata?' · '+M.nodata+' мин без связи не считаем':''))+
    kpi("swap","--setup",M.setup+' <small>мин</small>',"Переналадки",
-     '<span class="delta '+(M.setup>SETUP_NORM?'bad':'okc')+'">'+(M.setup>SETUP_NORM?'+'+(M.setup-SETUP_NORM)+' к норме':'в норме')+'</span> норма '+SETUP_NORM+' мин'+TBD)+
+     '<span class="delta '+(M.over?'bad':'okc')+'">'+(M.over?'+'+M.over+' к норме':'в норме')+'</span> норма '+SETUP_NORM+' мин'+TBD)+
    '</div>';
 }
 function timeline(M,title,subtitle){
-  var h='<section class="card mb"><div class="ch"><h2>'+title+'</h2><div class="r"><span class="ghost">08:00–20:00</span></div><div class="sub">'+subtitle+'</div></div><div class="tlwrap"><div class="tl">';
-  M.seg.forEach(function(s,i){h+='<div class="seg" data-i="'+i+'" style="left:'+pct(s[0])+'%;width:'+pct(s[1]-s[0])+'%;background:'+cv(ST[s[2]].c)+'"></div>'});
+  var h='<section class="card mb" data-tour="timeline"><div class="ch"><h2>'+title+'</h2><div class="r hm"><span class="ghost">08:00–20:00</span></div><div class="sub">'+subtitle+'</div></div><div class="tlwrap"><div class="tl">';
+  M.seg.forEach(function(s,i){h+='<div class="seg'+(selSeg===i?' sel':'')+'" data-i="'+i+'" style="left:'+pct(s[0])+'%;width:'+pct(s[1]-s[0])+'%;background:'+cv(ST[s[2]].c)+'"></div>'});
   h+='</div><div class="tpl">';
-  TPLS.forEach(function(t){h+='<div class="seg" style="left:'+pct(t[0])+'%;width:'+pct(t[1]-t[0])+'%;background:'+cv(t[3])+'">'+(t[2]=="Наладка"?"":"Шаблон "+t[2])+'</div>'});
+  TPLS.forEach(function(t){h+='<div class="seg" style="left:'+pct(t[0])+'%;width:'+pct(t[1]-t[0])+'%;background:'+cv(t[3])+'">'+t[2]+'</div>'});
   h+='</div><div class="axis">';
-  for(var i=0;i<=12;i+=2)h+='<span style="left:'+pct(i*60)+'%">'+hm(i*60)+'</span>';
+  for(var i=0;i<=12;i+=2)h+='<span class="'+(i%4?'odd':'')+'" style="left:'+pct(i*60)+'%">'+hm(i*60)+'</span>';
   h+='</div><div class="nowline" style="left:calc('+pct(NOW)+'% - 1px)"></div></div>'+
-     '<div class="readout" id="readout">Наведите на участок ленты, чтобы увидеть время и причину.</div><div class="legend">';
-  ORDER.forEach(function(k){h+='<span><i style="background:'+cv(ST[k].c)+'"></i>'+ST[k].n+(k==5?' (предупреждение)':'')+'</span>'});
+     '<div class="readout" id="readout">'+readoutHTML(M)+'</div><div class="legend">';
+  M.present.forEach(function(k){h+='<span><i style="background:'+cv(ST[k].c)+'"></i>'+ST[k].n+'</span>'});
   return h+'<span><i style="background:var(--soft);outline:1px solid var(--line)"></i>Ещё не наступило</span></div></section>';
+}
+function readoutHTML(M){
+  if(selSeg==null||!M.seg[selSeg])return "Нажмите на участок ленты — покажу время и причину.";
+  var g=M.seg[selSeg],tag=g[2]==2?tags[g[0]]:null;
+  return "<b>"+hm(g[0])+"–"+hm(g[1])+"</b> · "+ST[g[2]].n+(tag?" — "+tag:why[g[2]]?" — "+why[g[2]]:"")+" · "+dur(g[1]-g[0])+(g[2]==1?" · шаблон №"+tplAt(g[0]):"");
+}
+function templates(M){
+  var rows=[["12","--tpl1"],["27","--tpl2"]].map(function(t){
+    var o=M.tpl[t[0]],run=o.work+o.nd;
+    return '<div class="tplc"><div class="tbadge" style="background:'+cv(t[1])+'">№'+t[0]+'</div><div>'+
+      '<div class="n">'+o.n+' <small>карт</small></div>'+
+      '<div class="l">в работе '+dur(o.work)+(o.nd?' + '+o.nd+' мин без связи':'')+' · '+Math.round(o.n/run*60)+' карт/час</div>'+
+      '<div class="l">название <span class="tbd">уточняется</span></div></div></div>';
+  }).join("");
+  return '<section class="card mb" data-tour="templates"><div class="ch"><h2>Выпуск по шаблонам</h2><div class="sub">Какой шаблон работал и сколько карт на нём сделано. Карты за минуты без связи досчитаны по счётчику ПЛК.</div></div><div class="grid tp" style="margin:0">'+rows+'</div></section>';
 }
 function hourly(M){
   var W=640,H=260,L=36,R=8,Tp=12,B=30,pw=W-L-R,ph=H-Tp-B,YM=60,s="";
@@ -381,14 +499,13 @@ function hourly(M){
     s+='<text x="'+(X(o.h)+bw/2)+'" y="'+(H-8)+'" text-anchor="middle">'+String(8+o.h).padStart(2,"0")+'</text>';
   });
   s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(planH)+'" y2="'+Y(planH)+'" stroke="var(--tx)" stroke-dasharray="6 5" stroke-width="1.6"/>';
-  s+='<text x="'+(W-R)+'" y="'+(Y(planH)-6)+'" text-anchor="end" style="fill:var(--tx);font-weight:600">план '+planH.toFixed(0)+'/час</text>';
-  return '<section class="card"><div class="ch"><h2>Выпуск по часам</h2><div class="r"><span class="legend" style="margin:0"><span><i style="background:var(--blue-d)"></i>Сделано</span><span><i style="background:var(--blue);opacity:.6"></i>Могли без простоев</span></span></div>'+
-    '<div class="sub">Светлая часть столбика — сколько карт не сделали из-за остановок в этот час.</div></div>'+
+  s+='<text x="'+(W-R)+'" y="'+(Y(planH)-6)+'" text-anchor="end" style="fill:var(--tx);font-weight:600">план '+planH.toFixed(0)+'/час (демо)</text>';
+  return '<section class="card" data-tour="hourly"><div class="ch"><h2>Выпуск по часам</h2><div class="r"><span class="legend" style="margin:0"><span><i style="background:var(--blue-d)"></i>Сделано</span><span><i style="background:var(--blue);opacity:.6"></i>Могли без простоев</span></span></div>'+
+    '<div class="sub">Светлая часть столбика — сколько карт не сделали из-за остановок в этот час (оценка).</div></div>'+
     '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Выпуск карт по часам">'+s+'</svg></section>';
 }
 function losses(M){
-  // donut: structure of elapsed time
-  var parts=ORDER.filter(function(k){return k&&M.byState[k]}).map(function(k){return [k,M.byState[k]]}),R=60,C=2*Math.PI*R,off=0,arcs="";
+  var parts=M.present.filter(function(k){return k}).map(function(k){return [k,M.byState[k]]}),R=60,C=2*Math.PI*R,off=0,arcs="";
   parts.forEach(function(p){var len=p[1]/M.known*C;arcs+='<circle r="'+R+'" cx="75" cy="75" fill="none" stroke="'+cv(ST[p[0]].c)+'" stroke-width="20" stroke-dasharray="'+Math.max(len-2,0.5)+' '+(C-len+2)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 75 75)"/>';off+=len});
   var list=parts.filter(function(p){return p[0]!=1}).sort(function(a,b){return b[1]-a[1]}).slice(0,4).map(function(p){return '<li><i class="dot" style="background:'+cv(ST[p[0]].c)+'"></i>'+ST[p[0]].n+'<span>'+p[1]+' мин</span></li>'}).join("");
   var out='<div class="donut"><div class="c"><svg viewBox="0 0 150 150" width="150" height="150">'+arcs+'</svg><div><span><b>'+M.util+'%</b>в работе</span></div></div><ul>'+list+'</ul></div>'+(M.nodata?'<div class="sub" style="margin:0 0 4px">'+M.nodata+' мин без связи с ПЛК в расчёт не входят — это не простой.</div>':'');
@@ -396,7 +513,7 @@ function losses(M){
   M.list.forEach(function(i){(groups[i.group]=groups[i.group]||[]).push(i)});
   GROUPS.forEach(function(g){
     if(!groups[g])return;
-    out+='<div class="grp">'+(g=="Плановое"?"Плановое (против нормы)":g=="Предупреждения"?"Предупреждения (линия встала по защите)":g)+'</div>';
+    out+='<div class="grp">'+(g=="Плановое"?"Плановое (против нормы)":g=="Предупреждения"?"Предупреждения — сработала тепловая защита":g)+'</div>';
     groups[g].sort(function(a,b){return b.min-a.min}).forEach(function(i){
       var isSetup=i.st==4,unk=i.key=="s2";
       out+='<div class="loss"><div class="nm">'+i.label+(unk?'<small><span class="unk">нужно указать причину</span></small>':'')+(isSetup?'<small>норма '+SETUP_NORM+' мин'+TBD+'</small>':'<small>'+srcHTML(i.st,i.key.indexOf("t:")==0)+'</small>')+'</div>'+
@@ -404,15 +521,18 @@ function losses(M){
         '<div class="num">'+i.min+' мин<small>'+(isSetup?'+'+i.lost+' сверх нормы':i.planned?'плановое':'≈ '+Math.round(i.lostCards)+' карт')+'</small></div></div>';
     });
   });
-  return '<section class="card"><div class="ch"><h2>Куда ушло время</h2><div class="sub">Сколько минут смены заняло каждое состояние и что это стоило в картах (оценка).</div></div>'+out+'</section>';
+  return '<section class="card" data-tour="losses"><div class="ch"><h2>Куда ушло время</h2><div class="sub">Сколько минут смены заняло каждое состояние и что это стоило в картах.'+EST+'</div></div>'+out+'</section>';
+}
+function reasonBtns(start,small){
+  return '<div class="reasons'+(small?' sm':'')+'">'+REASONS.map(function(r){return '<button class="rbtn" data-tag="'+r[0]+'" data-start="'+start+'">'+r[0]+'</button>'}).join("")+'</div>';
 }
 function events(M,editable){
   var rows=M.seg.filter(function(s){return s[2]!=1});
-  var tabs=[["all","Все"]].concat(GROUPS.map(function(g){return [g,g=="Плановое"?"Плановое":g]}));
+  var tabs=[["all","Все"]].concat(GROUPS.map(function(g){return [g,g]}));
   var cnt=function(f){return rows.filter(function(s){return f=="all"||segGroup(s)==f}).length};
-  var h='<section class="card mb"><div class="ch"><h2>Остановки и события за смену</h2><div class="r"><span class="ghost">'+rows.length+' событий</span></div></div><div class="tabs">';
+  var h='<section class="card mb" data-tour="events"><div class="ch"><h2>Остановки и события за смену</h2><div class="r"><span class="ghost">'+rows.length+' событий</span></div></div><div class="tabs">';
   tabs.forEach(function(t){var n=cnt(t[0]);if(!n&&t[0]!="all")return;h+='<button data-filter="'+t[0]+'" class="'+(evFilter==t[0]?'on':'')+'">'+t[1]+'<span>'+n+'</span></button>'});
-  h+='</div><div class="tbl"><div class="tr th"><div>Время</div><div>Состояние</div><div>Причина</div><div class="d">Длит.</div><div class="c">Потеря</div></div>';
+  h+='</div><div class="tbl"><div class="tr th"><div>Время</div><div>Состояние</div><div>Причина</div><div class="d">Длит.</div><div class="c">Потеря (оценка)</div></div>';
   var shown=rows.filter(function(s){return evFilter=="all"||segGroup(s)==evFilter});
   if(!shown.length)h+='<div class="empty">В этой группе остановок нет.</div>';
   shown.forEach(function(s){
@@ -430,14 +550,8 @@ function events(M,editable){
   });
   return h+'</div></section>';
 }
-function templates(M){
-  var n12=Math.round(163*R12),n27=M.done-n12;
-  var info=[["12","--tpl1",n12,163],["27","--tpl2",n27,Math.round(n27/R27)]];
-  return '<div class="grid tp">'+info.map(function(t){return '<div class="card tcard"><div class="tbadge" style="background:'+cv(t[1])+'">№'+t[0]+'</div><div>'+
-    '<div class="n">'+t[2]+' <small>карт</small></div><div class="l">шаблон №'+t[0]+' · в работе '+dur(t[3])+' · '+Math.round(t[2]/t[3]*60)+' карт/час</div></div></div>'}).join("")+'</div>';
-}
 function changeovers(M){
-  var tot=M.changes.reduce(function(a,c){return a+c.d},0),over=M.changes.reduce(function(a,c){return a+Math.max(0,c.d-SETUP_NORM)},0),mx=Math.max(SETUP_NORM*2,Math.max.apply(null,M.changes.map(function(c){return c.d})));
+  var tot=M.changes.reduce(function(a,c){return a+c.d},0),mx=Math.max(SETUP_NORM*2,Math.max.apply(null,M.changes.map(function(c){return c.d})));
   var rows=M.changes.map(function(c){
     var n=Math.min(c.d,SETUP_NORM),o=Math.max(0,c.d-SETUP_NORM);
     return '<div class="row"><div class="tm" style="color:var(--mu)">'+hm(c.a)+'–'+hm(c.b)+'</div>'+
@@ -445,16 +559,10 @@ function changeovers(M){
       '<div class="nbar"><b style="width:'+n/mx*100+'%"></b>'+(o?'<b class="over" style="left:'+n/mx*100+'%;width:'+o/mx*100+'%"></b>':'')+'<em style="left:'+SETUP_NORM/mx*100+'%"></em></div>'+
       '<div style="text-align:right"><b>'+c.d+' мин</b><div class="'+(o?'bad':'okc')+'" style="font-size:14.5px;font-weight:600">'+(o?'+'+o+' к норме':'в норме')+'</div></div></div>';
   }).join("");
-  return '<section class="card mb"><div class="ch"><h2>Переналадки за смену</h2><div class="r"><span class="ghost">норма '+SETUP_NORM+' мин на смену шаблона</span>'+TBD+'</div>'+
+  return '<section class="card mb" data-tour="changeovers"><div class="ch"><h2>Переналадки за смену</h2><div class="r"><span class="ghost">норма '+SETUP_NORM+' мин</span>'+TBD+'</div>'+
     '<div class="sub">Каждая смена шаблона: сколько длилась и насколько вышла за норму. Красное — превышение.</div></div>'+
-    '<div class="chg"><div class="tot"><div class="v">'+tot+' <small>мин</small></div><div class="l">'+M.changes.length+' '+(M.changes.length==1?'смена шаблона':'смены шаблона')+'</div>'+
-    '<div class="l '+(over?'bad':'okc')+'" style="font-weight:700">'+(over?'+'+over+' мин сверх нормы':'всё в норме')+'</div></div><div>'+rows+'</div></div></section>';
-}
-function attention(M){
-  if(!M.untagged.length)return "";
-  var min=M.untagged.reduce(function(a,s){return a+s[1]-s[0]},0);
-  return '<section class="card alert mb"><span class="ic" style="--c:var(--pause)">'+ic("warn")+'</span><div><h2>Нужно указать причину: '+M.untagged.length+' '+(M.untagged.length==1?'остановка':'остановки')+' ('+min+' мин)</h2>'+
-   '<div class="s">Без причины эти минуты нельзя отнести ни к оборудованию, ни к материалу.</div></div><button class="btn" data-filter="Причина не указана" data-jump="1">Показать</button></section>';
+    '<div class="chg"><div class="tot"><div class="v">'+tot+' <small>мин</small></div><div class="l">'+M.changes.length+' '+plural(M.changes.length,"смена шаблона","смены шаблона","смен шаблона")+'</div>'+
+    '<div class="l '+(M.over?'bad':'okc')+'" style="font-weight:700">'+(M.over?'+'+M.over+' мин сверх нормы':'всё в норме')+'</div></div><div>'+rows+'</div></div></section>';
 }
 
 // ---- shell ----
@@ -468,48 +576,153 @@ function shell(content){
     '<main class="main"><div class="top"><div class="search">'+ic("search")+'Поиск станка или события</div><span class="sp"></span>'+
     '<span class="ibtn">'+ic("bell")+(M_.untagged.length?'<span class="ndot"></span>':'')+'</span><span class="ava" title="'+r[1]+'">'+r[2]+'</span></div>'+
     '<div class="ph"><div><div class="crumbs">Линии и станки › Линия Цесис 2</div><h1>Линия Цесис 2</h1></div><div class="meta">'+
-    '<span class="pill">Станок <b>PLC_Cesis2</b></span><span class="pill">Смена <b>08:00–20:00</b></span><span class="pill">Обновлено <b>19:40</b></span></div></div>'+
+    statusPill(M_)+'<span class="pill">Смена <b>08:00–20:00</b></span><span class="pill hm">Обновлено <b>19:40</b></span></div></div>'+
     content+'<div class="foot">Данные демонстрационные: сценарий смены собран по ТЗ и карте сигналов линии. В рабочей версии данные приходят с ПЛК линии через сборщик данных.</div></main></div>';
 }
 
 // ---- views ----
 function viewOperator(M){
   var c=M.cur,col=(c[2]==3||c[2]==8||c[2]==0)?"#121519":"#fff",tag=tags[c[0]];
-  var h='<div class="op"><div class="top"><h1>Линия Цесис 2</h1><span class="sp"></span><span class="pill">Смена <b>08:00–20:00</b></span><span class="pill"><b>19:40</b></span><span class="ava">ОП</span></div>';
-  h+='<section class="status" style="background:'+cv(ST[c[2]].c)+';color:'+col+'"><span class="ring">'+ic(c[2]==1?"play":"stop")+'</span><div><div class="lbl">Линия сейчас</div><div class="big">'+ST[c[2]].big+'</div>'+
+  var h='<div class="op"><div class="top"><h1>Линия Цесис 2</h1><span class="sp hm"></span><span class="pill">Смена <b>08:00–20:00</b></span><span class="pill"><b>19:40</b></span><span class="ava hm">ОП</span></div>';
+  h+='<section class="status" data-tour="status" style="background:'+cv(ST[c[2]].c)+';color:'+col+'"><span class="ring">'+ic(c[2]==1?"play":"stop")+'</span><div><div class="lbl">Линия сейчас</div><div class="big">'+ST[c[2]].big+'</div>'+
      '<div class="for">'+(c[2]==1?'уже '+dur(M.curDur)+' · шаблон №27':dur(M.curDur)+' · '+(c[2]==2?(tag?'причина: '+tag:'причина не указана'):why[c[2]]))+'</div></div></section>';
   if(c[2]==2){
-    if(!tag)h+='<section class="card ask mb"><h2>Почему остановили?</h2><div class="reasons">'+
-      REASONS.map(function(r){return '<button class="rbtn" data-tag="'+r[0]+'" data-start="'+c[0]+'">'+r[0]+'</button>'}).join("")+'</div></section>';
+    if(!tag)h+='<section class="card ask mb" data-tour="reasons"><h2>Почему остановили?</h2>'+reasonBtns(c[0])+'</section>';
     else h+='<section class="card mb"><div class="done-r"><span class="ic" style="--c:var(--ok)">'+ic("check")+'</span><span>Записано: '+tag+'</span><button class="btn lt" data-untag="'+c[0]+'">Изменить</button></div></section>';
   }
-  h+='<section class="card mb"><div class="ch"><span class="ic" style="--c:var(--ok)">'+ic("box")+'</span><h2>Сделано карт</h2></div><div class="prog"><span class="num">'+M.done+'</span><span class="of">из '+PLAN+'</span></div>'+
+  // earlier stops still without a reason — the operator can close them too
+  var past=M.untagged.filter(function(s){return s[0]!=c[0]});
+  if(past.length){
+    h+='<section class="card mb" data-tour="unt"><div class="ch"><h2>Остановки без причины: '+past.length+'</h2><div class="sub">Укажите, почему стояли — эти минуты попадут в отчёт начальника участка.</div></div>';
+    past.forEach(function(s){
+      h+='<div class="unt-row"><span class="tm">'+hm(s[0])+'–'+hm(s[1])+'</span><b>Стоп · '+(s[1]-s[0])+' мин</b><button class="btn" data-open="'+s[0]+'">'+(openTag===s[0]?'Свернуть':'Указать причину')+'</button>'+(openTag===s[0]?reasonBtns(s[0],true):'')+'</div>';
+    });
+    h+='</section>';
+  }
+  h+='<section class="card mb" data-tour="prog"><div class="ch"><span class="ic" style="--c:var(--ok)">'+ic("box")+'</span><h2>Сделано за смену</h2></div><div class="prog"><span class="num">'+M.done+'</span><span class="of">карт</span></div>'+
      '<div class="prog-t"><i style="width:'+M.done/PLAN*100+'%"></i><em style="left:'+M.planNow/PLAN*100+'%"></em></div>'+
-     '<div class="prog-line">'+(M.gap>0?'<b class="bad">Отстаём на '+M.gap+' карт.</b>':'<b class="okc">Идём по плану.</b>')+' К этому времени надо '+M.planNow+TBD+'. Темп '+M.perHour.toFixed(0)+' карт/час, нужно '+(PLAN/12).toFixed(0)+'.</div></section>';
-  return h+timeline(M,"Смена","Цвет — что делала линия.")+'</div>';
+     '<div class="prog-line">По графику к 19:40 — '+M.planNow+', за смену — '+PLAN+'.'+TBD+'</div></section>';
+  return h+timeline(M,"Смена","Цвет — что делала линия.")+templates(M)+'</div>';
 }
 function viewForeman(M){
-  return shell(verdict(M)+attention(M)+kpis(M)+changeovers(M)+timeline(M,"Как прошла смена","Каждый цвет — состояние линии. Наведите на участок, чтобы увидеть время и причину.")+
-    events(M,true)+'<div class="grid two">'+hourly(M)+losses(M)+'</div>'+templates(M));
+  return shell(nowCard(M)+timeline(M,"Как прошла смена","Каждый цвет — состояние линии. Нажмите на участок, чтобы увидеть время и причину.")+templates(M)+
+    changeovers(M)+events(M,true)+kpis(M)+'<div class="grid two">'+losses(M)+hourly(M)+'</div>');
 }
 function viewBoss(M){
-  return shell(verdict(M)+kpis(M)+changeovers(M)+'<div class="grid two">'+hourly(M)+losses(M)+'</div>'+
-    timeline(M,"Как прошла смена","Каждый цвет — состояние линии. Наведите на участок, чтобы увидеть время и причину.")+templates(M)+events(M,false));
+  return shell(verdict(M)+timeline(M,"Как прошла смена","Каждый цвет — состояние линии. Нажмите на участок, чтобы увидеть время и причину.")+templates(M)+
+    kpis(M)+changeovers(M)+'<div class="grid two">'+losses(M)+hourly(M)+'</div>'+events(M,false));
 }
+
+// ---- help drawer: legend, labels, what is invented, open questions ----
+function helpHTML(){
+  var lg=ORDER.map(function(k){return '<i style="background:'+cv(ST[k].c)+'"></i><div><b>'+ST[k].n+'</b> — '+ST[k].d+'</div>'}).join("");
+  return '<div class="bk" data-help="1"></div><div class="pnl"><div class="hd"><h2>Пояснения к прототипу</h2><button class="btn lt" data-help="1">Закрыть</button></div>'+
+  '<p>Экран смены одной линии — «Линия Цесис 2», сварка арматурных сеток. Единица выпуска — карта. Интерфейс общий для любого завода, термины линии настраиваются.</p>'+
+  '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки.</li>'+
+  '<li><b>Начальник участка</b> — что требует действия сейчас: остановки без причины, переналадки сверх нормы, журнал событий.</li>'+
+  '<li><b>Директор / собственник</b> — итог смены, куда ушло время, выпуск по шаблонам.</li></ul>'+
+  '<p>Переключатель «Линия сейчас» в верхней полосе показывает, как экран выглядит, когда линия стоит.</p>'+
+  '<h3>Цвета состояний</h3><div class="lg">'+lg+'</div>'+
+  '<h3>Метки</h3><ul><li><span class="src">ПЛК</span> — состояние и причину определил контроллер линии автоматически.</li>'+
+  '<li><span class="src opr">Оператор</span> — причину указал человек.</li>'+
+  '<li><span class="tbd">не подтверждено</span> — правило определения ещё проверяется на линии.</li>'+
+  '<li><span class="tbd">демо, уточняется</span> — значение условное: план смены, норма переналадки, названия шаблонов.</li>'+
+  '<li><span class="tbd">оценка</span> — потери в картах посчитаны как минуты простоя × средний темп шаблона.</li></ul>'+
+  '<h3>Что вымышлено</h3><ul><li>Все цифры смены: записанных данных с линии пока нет, есть только карта сигналов ПЛК.</li>'+
+  '<li>План 520 карт за смену и норма переналадки 20 минут.</li><li>Список причин для оператора — черновой, уточняется с производством.</li>'+
+  '<li>Пункты меню кроме «Линия Цесис 2» не работают — показывают структуру продукта.</li></ul>'+
+  '<h3>Открытые вопросы</h3><ul><li>Откуда берётся план смены и кто его утверждает.</li><li>Норма времени на переналадку.</li>'+
+  '<li>Названия шаблонов №12 и №27.</li><li>«Обрыв прутка / проволоки» и «заедание прутка» — одна причина или две.</li>'+
+  '<li>Устройство оператора: телефон или планшет / экран на стойке у линии.</li><li>Как часто сборщик данных опрашивает ПЛК: при редком опросе короткие остановки теряются.</li></ul></div>';
+}
+
+// ---- guided tour: dim the page, highlight one block, explain it ----
+var TOURS={
+  op:[
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль и состояние линии. Сейчас — экран оператора у линии. Цифры вымышлены."],
+    ["status","Состояние линии","Видно издалека: цвет и одно слово. Ниже — сколько длится и какой шаблон в работе."],
+    ["reasons","Линия встала — укажите причину","Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
+    ["unt","Прошлые остановки без причины","Если причину не указали сразу, она ждёт здесь. Минуты сразу попадают в отчёт начальника участка."],
+    ["prog","Сколько сделано","Выпуск за смену и отметка «где надо быть по графику». Без красного: план пока не утверждён."],
+    ["timeline","Лента смены","Каждый цвет — состояние линии. Нажмите на участок — покажет время и причину. В легенде только то, что было за смену."],
+    ["help","Пояснения","Что значат цвета и метки, что вымышлено и какие вопросы открыты. Тур можно пройти заново кнопкой «Тур по экрану»."]
+  ],
+  foreman:[
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль и состояние линии. Сейчас — экран начальника участка. Цифры вымышлены."],
+    ["now","Что требует действия","Состояние линии и то, что нужно сделать: указать причины остановок, разобрать переналадку сверх нормы."],
+    ["timeline","Лента смены","Пункт 1 ТЗ: работа, стоп, пауза, аварии по времени. Нажмите на участок — покажет время и причину."],
+    ["templates","Выпуск по шаблонам","Пункт 2 ТЗ: какой шаблон работал и сколько карт на нём сделано."],
+    ["changeovers","Переналадки","Главная боль: каждая смена шаблона против нормы. Красное — превышение."],
+    ["events","Журнал остановок","Пункт 3 ТЗ. Фильтр по группам, «Указать причину» для стопов без причины. Метка ПЛК или Оператор — кто определил причину.",function(){evFilter="all";render()}],
+    ["losses","Куда ушло время","Доля работы за смену и потери по группам — в минутах и в картах (оценка)."],
+    ["help","Пояснения","Что значат цвета и метки, что вымышлено и какие вопросы открыты. Тур можно пройти заново кнопкой «Тур по экрану»."]
+  ],
+  boss:[
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль и состояние линии. Сейчас — экран директора. Цифры вымышлены."],
+    ["verdict","Итог смены одной строкой","Сколько сделано против графика, прогноз к концу смены и главные потери."],
+    ["timeline","Лента смены","Работа, стоп, пауза, аварии по времени. Нажмите на участок — покажет время и причину."],
+    ["templates","Выпуск по шаблонам","Какой шаблон работал и сколько карт на нём сделано."],
+    ["changeovers","Переналадки","Главная боль: каждая смена шаблона против нормы. Красное — превышение."],
+    ["losses","Куда ушло время","Доля работы за смену и потери по группам — в минутах и в картах (оценка)."],
+    ["help","Пояснения","Что значат цвета и метки, что вымышлено и какие вопросы открыты. Тур можно пройти заново кнопкой «Тур по экрану»."]
+  ]
+};
+var tour=null;
+function tourEl(key){return document.querySelector('[data-tour="'+key+'"]')}
+function startTour(){
+  closeHelp();
+  tour={steps:TOURS[role],i:0};
+  if(!$("tour")){var d=document.createElement("div");d.id="tour";d.innerHTML='<div class="catch"></div><div class="spot"></div><div class="tip"></div>';document.body.appendChild(d)}
+  showStep(0);
+}
+function showStep(i){
+  if(!tour)return;
+  if(i<0)i=0;
+  if(i>=tour.steps.length){endTour();return}
+  var st=tour.steps[i];
+  if(st[3])st[3]();
+  if(!tourEl(st[0])){showStep(i+(i>=tour.i?1:-1));return}   // block not on this screen — skip it
+  tour.i=i;
+  var el=tourEl(st[0]),tip=document.querySelector("#tour .tip");
+  if(el.closest(".demo-bar"))window.scrollTo(0,0);else el.scrollIntoView({block:"center"});
+  tip.innerHTML='<h3>'+st[1]+'</h3><p>'+st[2]+'</p><div class="bar2"><span class="cnt">'+(i+1)+' из '+tour.steps.length+'</span>'+
+    (i?'<button class="btn lt" data-tstep="-1">Назад</button>':'<button class="btn lt" data-tend="1">Пропустить</button>')+
+    '<button class="btn" data-tstep="1">'+(i==tour.steps.length-1?'Готово':'Далее')+'</button></div>';
+  placeTour();
+}
+function placeTour(){
+  if(!tour)return;
+  var el=tourEl(tour.steps[tour.i][0]);if(!el)return;
+  var r=el.getBoundingClientRect(),p=8,spot=document.querySelector("#tour .spot"),tip=document.querySelector("#tour .tip");
+  var top=Math.max(r.top-p,4),bottom=Math.min(r.bottom+p,innerHeight-4);
+  spot.style.left=(r.left-p)+"px";spot.style.top=top+"px";spot.style.width=(r.width+2*p)+"px";spot.style.height=(bottom-top)+"px";
+  var tw=tip.offsetWidth,th=tip.offsetHeight,tl=Math.min(Math.max(12,r.left),innerWidth-tw-12),tt;
+  if(bottom+12+th<innerHeight)tt=bottom+12;else if(top-12-th>0)tt=top-12-th;else tt=innerHeight-th-12;
+  tip.style.left=tl+"px";tip.style.top=tt+"px";
+}
+function endTour(){tour=null;var t=$("tour");if(t)t.remove()}
+function openHelp(){var h=$("help");h.innerHTML=helpHTML();h.classList.add("open")}
+function closeHelp(){$("help").classList.remove("open")}
 
 // ---- render & events ----
 var M_;
 function render(){
   M_=model();
   $("app").innerHTML=role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_);
-  $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'">'+r[1]+'</button>'}).join("");
+  $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
 }
 document.addEventListener("click",function(e){
-  var b=e.target.closest("button");if(!b)return;
+  var seg=e.target.closest(".tl .seg");
+  if(seg&&!tour){selSeg=+seg.dataset.i===selSeg?null:+seg.dataset.i;render();return}
+  var b=e.target.closest("button,[data-help]");if(!b)return;
   var d=b.dataset;
-  if(d.role){role=d.role;try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null}
-  else if(d.scen){scen=d.scen;openTag=null}
+  if(d.tstep){showStep(tour.i+(+d.tstep));return}
+  if(d.tend){endTour();return}
+  if(d.tourstart){startTour();return}
+  if(d.help){$("help").classList.contains("open")?closeHelp():openHelp();return}
+  if(d.role){role=d.role;try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
+  else if(d.scen){scen=d.scen;openTag=null;selSeg=null}
   else if(d.tag){tags[+d.start]=d.tag;openTag=null}
   else if(d.untag){delete tags[+d.untag]}
   else if(d.open){openTag=openTag===+d.open?null:+d.open}
@@ -518,13 +731,16 @@ document.addEventListener("click",function(e){
   render();
   if(d.jump){var t=document.querySelector(".tabs");if(t)t.scrollIntoView({behavior:"smooth",block:"center"})}
 });
-document.addEventListener("mouseover",function(e){
-  var s=e.target.closest(".tl .seg"),r=$("readout");if(!r)return;
-  if(!s){r.innerHTML="Наведите на участок ленты, чтобы увидеть время и причину.";return}
-  var g=M_.seg[+s.dataset.i],tag=g[2]==2?tags[g[0]]:null;
-  r.innerHTML="<b>"+hm(g[0])+"–"+hm(g[1])+"</b> · "+ST[g[2]].n+(tag?" — "+tag:why[g[2]]?" — "+why[g[2]]:"")+" · "+dur(g[1]-g[0]);
+document.addEventListener("keydown",function(e){
+  if(tour){if(e.key=="Escape")endTour();else if(e.key=="ArrowRight")showStep(tour.i+1);else if(e.key=="ArrowLeft")showStep(tour.i-1)}
+  else if(e.key=="Escape")closeHelp();
 });
+addEventListener("resize",placeTour);
+addEventListener("scroll",placeTour,{passive:true});
 render();
+// first visit: start the tour once
+var seen=false;try{seen=localStorage.getItem("cesis2-tour")=="1";localStorage.setItem("cesis2-tour","1")}catch(x){}
+if(!seen)setTimeout(startTour,500);
 </script>
 </body>
 </html>
