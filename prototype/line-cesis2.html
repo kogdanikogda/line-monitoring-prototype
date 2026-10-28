@@ -15,7 +15,7 @@
   /* color */
   --bg:#E6EAEB;--side:#F4F6F6;--card:#FFFFFF;--inner:#F3F5F6;--line:#E2E6E8;--tx:#14181D;--mu:#5A636E;--soft:#ECEFF1;--ink:#121519;--ink-tx:#FFFFFF;
   --ok:#2F8F63;--idle:#6E7A89;--pause:#D99A16;--wait:#B5835A;--setup:#7A62D6;--heat:#E57A2E;--fault:#D2433A;--estop:#8A1F1F;--nodata:#C5CBD1;
-  /* line states: fill + text on it. A "quiet normal" (ISA-101 style): running is calm, only deviations are saturated */
+  /* line states: fill + text on it. "Quiet normal" (ISA-101 high-performance HMI): running is calm, only deviations are saturated. Chosen by Alex over a muted andon and a monochrome variant */
   --s-run:#C9DCD0;--s-run-fg:#24513A;--s-stop:#C8372D;--s-stop-fg:#FFFFFF;--s-pause:#F2C14E;--s-pause-fg:#4A3300;--s-wait:#E3C79A;--s-wait-fg:#4A3300;
   --s-setup:#CFC9EE;--s-setup-fg:#3C3489;--s-heat:#EE9A5B;--s-heat-fg:#4A2200;--s-fault:#7E1F1A;--s-fault-fg:#FFFFFF;--s-estop:#4A0F0C;--s-estop-fg:#FFFFFF;--s-nodata:#E4E4E1;--s-nodata-fg:#5F5E5A;
   --blue:#8CCDEB;--blue-d:#2E9BD0;--warn-bg:#FFF2CC;--warn-tx:#634700;--tpl1:#3F6FD1;--tpl2:#22899B;
@@ -34,10 +34,6 @@
   --safe-b:env(safe-area-inset-bottom,0px);
   --ff:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
-/* B "muted andon": classic traffic-light meaning, lower saturation */
-body.pal-b{--s-run:#4F8A68;--s-run-fg:#FFFFFF;--s-stop:#C0463A;--s-pause:#D9AE4A;--s-pause-fg:#3D2A00;--s-wait:#C29A6B;--s-wait-fg:#2E1F0A;--s-setup:#6E68B0;--s-setup-fg:#FFFFFF;--s-heat:#D9773A;--s-heat-fg:#FFFFFF;--s-fault:#8E2A22;--s-estop:#5A1712;--s-nodata:#A9AEB4;--s-nodata-fg:#22262B}
-/* C "monochrome + signal": colour only where something is wrong */
-body.pal-c{--s-run:#E2E1DB;--s-run-fg:#2C2C2A;--s-setup:#B4B2A9;--s-setup-fg:#2C2C2A;--s-wait:#E8D6A8;--s-heat:#E8873E;--s-heat-fg:#2C1300;--s-fault:#2C2C2A;--s-estop:#000000;--s-nodata:#F1F1EF}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:var(--t-body) Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
@@ -465,7 +461,6 @@ body.dev .opwrap{min-height:100%}
   <div class="ctl" data-tour="demo"><span>Роль</span><div id="roles"></div></div>
   <div class="ctl scrn"><span>Экран</span><div id="screens"></div></div>
   <div class="ctl"><span>Линия сейчас</span><div id="scens"></div></div>
-  <div class="ctl"><span>Цвета</span><div id="pals"></div></div>
   <div class="right"><button class="dbtn" data-tourstart="1">Тур по экрану</button><button class="dbtn" data-help="1" data-tour="help">Пояснения</button></div>
 </div>
 <div id="devbox"><div id="dev"><span class="cam"></span><div class="screen"><div class="sbar" id="sbar"></div><span class="island"></span><div id="app"></div><span class="homeind"></span></div></div></div>
@@ -499,7 +494,6 @@ function tplAt(m){return m<185?"12":"27"}
 
 var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Начальник производства","НП","Производство"]];
 var SCENS=[["run","Работает"],["stop","Станок стоит"],["fault","Авария"],["nolink","Нет связи"]];
-var PALS=[["a","A","Тихая норма"],["b","B","Приглушённый андон"],["c","C","Монохром + сигнал"]];
 var SCREENS=[["phone","Телефон"],["tab","Планшет"],["desk","Десктоп"]];
 // shop structure for the sidebar: unit -> lines/machines; state uses ST codes, -1 = switched off. Only Cesis 2 opens.
 var UNITS=[
@@ -507,8 +501,7 @@ var UNITS=[
   {id:"bend",n:"Гибочный участок",items:[["Гибочный ГС-1",6],["Гибочный ГС-2",-1]]}
 ];
 var WORD={1:"",2:"стоп",3:"простой",4:"наладка",5:"перегрев",6:"авария",7:"авар. стоп",8:"простой",0:"нет данных","-1":"выключен"};
-var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={},ptab="shift",compact=false,promptLater=null,tplNames={},editTpl=null,called={},pal="a";
-try{pal=localStorage.getItem("cesis2-pal")||"a"}catch(x){}
+var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={},ptab="shift",compact=false,promptLater=null,tplNames={},editTpl=null,called={};
 var tabRot="land";
 try{screen=localStorage.getItem("cesis2-screen")||"desk";tabRot=localStorage.getItem("cesis2-rot")||"land"}catch(x){}
 if(!SCREENS.some(function(x){return x[0]==screen}))screen=screen=="small"?"phone":"desk";
@@ -980,8 +973,6 @@ function render(){
   $("screens").innerHTML=SCREENS.filter(function(r){return !(role=="op"&&r[0]=="phone")}).map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
     (screen=="tab"?'<button data-rotate="1" title="Повернуть планшет">↻ '+(tabRot=="land"?"Вертикально":"Горизонтально")+'</button>':'');
   $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
-  document.body.classList.remove("pal-a","pal-b","pal-c");document.body.classList.add("pal-"+pal);
-  $("pals").innerHTML=PALS.map(function(r){return '<button data-pal="'+r[0]+'" title="'+r[2]+'" class="'+(r[0]==pal?"on":"")+'">'+r[1]+' · '+r[2]+'</button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
 }
 // a stop without a reason takes over the operator's screen right away (product rule); "later" folds it into the card
@@ -995,7 +986,6 @@ document.addEventListener("click",function(e){
   if(d.later){promptLater=+d.later;render();return}
   if(d.unfold){promptLater=null;render();scrollTopApp();return}
   if(d.master){called[+d.master]=hm(NOW);render();toast("Мастер участка вызван");return}
-  if(d.pal){pal=d.pal;try{localStorage.setItem("cesis2-pal",pal)}catch(x){}render();return}
   if(d.tedit){editTpl=d.tedit;render();var t=document.querySelector(".tin");if(t)t.focus();return}
   if(d.tsave){saveTpl(d.tsave);return}
   if(d.tcancel){editTpl=null;render();return}
