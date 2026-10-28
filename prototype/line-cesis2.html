@@ -547,7 +547,7 @@ var UNITS=[
 ];
 var WORD={1:"",2:"стоп",3:"простой",4:"наладка",5:"перегрев",6:"авария",7:"авар. стоп",8:"простой",0:"нет данных","-1":"выключен"};
 var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={},ptab="shift",compact=false,promptLater=null,tplNames={},editTpl=null,called={};
-var tabRot="land";
+var tabRot="land",screenPrev=null;   // the operator panel is always a tablet; other roles get their device back
 try{screen=localStorage.getItem("cesis2-screen")||"desk";tabRot=localStorage.getItem("cesis2-rot")||"land"}catch(x){}
 if(!SCREENS.some(function(x){return x[0]==screen}))screen=screen=="small"?"phone":"desk";
 if(!ROLES.some(function(r){return r[0]==role}))role="foreman";
@@ -1013,13 +1013,14 @@ function closeHelp(){$("help").classList.remove("open")}
 // ---- render & events ----
 var M_;
 function render(){
+  if(role=="op"&&screen!="tab"){screenPrev=screen;screen="tab"}
   M_=model();
   frame();
   compact=$("app").clientWidth<600;
   var keep=document.querySelector(".scr"),top=keep?keep.scrollTop:0;
   $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>';
   if(screen!="desk")document.querySelector(".scr").scrollTop=top;
-  $("screens").innerHTML=SCREENS.filter(function(r){return !(role=="op"&&r[0]=="phone")}).map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
+  $("screens").innerHTML=SCREENS.filter(function(r){return role!="op"||r[0]=="tab"}).map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
     (screen=="tab"?'<button data-rotate="1" title="Повернуть планшет">↻ '+(tabRot=="land"?"Вертикально":"Горизонтально")+'</button>':'');
   $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
@@ -1052,7 +1053,7 @@ document.addEventListener("click",function(e){
   if(d.help){$("help").classList.contains("open")?closeHelp():openHelp();return}
   if(d.rotate){tabRot=tabRot=="land"?"port":"land";try{localStorage.setItem("cesis2-rot",tabRot)}catch(x){}var a2=$("app");a2.classList.add("noanim");render();setTimeout(function(){a2.classList.remove("noanim")},60);return}
   if(d.screen){screen=d.screen;try{localStorage.setItem("cesis2-screen",screen)}catch(x){}var ap=$("app");ap.classList.remove("menu");ap.classList.add("noanim");render();setTimeout(function(){ap.classList.remove("noanim")},60);window.scrollTo(0,0);return}
-  if(d.role){role=d.role;if(role=="op"&&screen=="phone"){screen="tab";tabRot="land"}$("app").classList.remove("menu");try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
+  if(d.role){role=d.role;if(role!="op"&&screenPrev){screen=screenPrev;screenPrev=null}$("app").classList.remove("menu");try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
   else if(d.scen){scen=d.scen;openTag=null;selSeg=null;promptLater=null}
   else if(d.tag){tags[+d.start]=d.tag;openTag=null}
   else if(d.untag){delete tags[+d.untag]}
