@@ -1021,7 +1021,7 @@ function render(){
   $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>';
   if(screen!="desk")document.querySelector(".scr").scrollTop=top;
   $("screens").innerHTML=SCREENS.filter(function(r){return role!="op"||r[0]=="tab"}).map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
-    (screen=="tab"?'<button data-rotate="1" title="Повернуть планшет">↻ '+(tabRot=="land"?"Вертикально":"Горизонтально")+'</button>':'');
+    (screen=="tab"&&role!="op"?'<button data-rotate="1" title="Повернуть планшет">↻ '+(tabRot=="land"?"Вертикально":"Горизонтально")+'</button>':'');
   $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
 }
@@ -1071,7 +1071,8 @@ function frame(){
   var dev=screen!="desk"&&innerWidth>=700,b=document.body;
   b.style.setProperty("--barh",document.querySelector(".demo-bar").offsetHeight+"px");
   b.classList.toggle("dev",dev);b.classList.toggle("phone",dev&&screen=="phone");b.classList.toggle("tab",dev&&screen=="tab");
-  b.classList.toggle("land",tabRot=="land");b.classList.toggle("port",tabRot=="port");
+  var rot=role=="op"?"land":tabRot;   // the operator panel stands landscape at the machine; other roles can rotate the tablet
+  b.classList.toggle("land",rot=="land");b.classList.toggle("port",rot=="port");
   b.classList.toggle("kiosk",dev&&role=="op");
   var box=$("devbox"),d=$("dev");
   if(!dev){box.style.width=box.style.height="";d.style.transform="";$("sbar").innerHTML="";return}
