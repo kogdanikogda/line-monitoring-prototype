@@ -237,9 +237,47 @@ svg text{fill:var(--mu);font-size:13px;font-family:inherit}
 /* demo strip extras */
 .demo-bar .right{margin-left:auto;display:flex;gap:8px}
 #app{container-type:inline-size;container-name:app}
-body.small{background:#CFD5D8}
-body.small #app{width:410px;height:calc(100vh - 92px);min-height:560px;margin:18px auto;border:10px solid #121519;border-radius:46px;overflow:hidden;transform:translateZ(0);background:var(--bg);box-shadow:0 24px 60px rgba(0,0,0,.25)}
-body.small .scr{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+/* device frames: desktop shows the page as is; phone and tablet are drawn at real point sizes, then scaled to fit the window */
+.sbar,.island,.homeind,.cam{display:none}
+body.dev{background:#CBD1D4}
+body.dev #devbox{margin:22px auto 30px;position:relative}
+body.dev #dev{position:absolute;left:0;top:0;transform-origin:0 0;background:#16181B;box-shadow:inset 0 0 0 2px #3B3F45,0 30px 70px rgba(0,0,0,.28)}
+body.dev .screen{position:relative;overflow:hidden;background:var(--bg)}
+body.dev #app{position:absolute;left:0;right:0;bottom:0;overflow:hidden;transform:translateZ(0)}
+body.dev .scr{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+body.dev .scr::-webkit-scrollbar{display:none}
+body.dev .shell{min-height:0}
+.side{position:sticky;top:60px;align-self:start;height:calc(100vh - 74px);overflow-y:auto}
+body.dev .side{top:0}
+body.tab.land .side{height:796px}
+body.tab.port .side{height:1156px}
+body.dev .sbar{display:flex;position:absolute;left:0;right:0;top:0;align-items:center;justify-content:space-between;color:#111;font-weight:600;z-index:4;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,sans-serif}
+.sbar .ics{display:flex;align-items:center;gap:6px}
+.sbar svg{display:block}
+body.dev .homeind{display:block;position:absolute;left:50%;transform:translateX(-50%);height:5px;border-radius:3px;background:#111;opacity:.85;z-index:80;pointer-events:none}
+/* iPhone */
+body.phone #dev{width:417px;height:876px;padding:12px;border-radius:68px}
+body.phone .screen{width:393px;height:852px;border-radius:56px}
+body.phone #app{top:54px}
+body.phone .scr{padding-bottom:34px}
+body.phone .sbar{height:54px;padding:6px 30px 0 46px;font-size:17px}
+body.phone .island{display:block;position:absolute;left:50%;top:11px;width:126px;height:37px;margin-left:-63px;border-radius:20px;background:#000;z-index:5}
+body.phone .homeind{bottom:8px;width:134px}
+body.phone #dev::before,body.phone #dev::after{content:"";position:absolute;width:4px;border-radius:2px;background:#2A2D31}
+body.phone #dev::before{right:-4px;top:200px;height:96px}
+body.phone #dev::after{left:-4px;top:170px;height:60px;box-shadow:0 84px 0 #2A2D31}
+/* iPad, landscape by default */
+body.tab #dev{padding:20px;border-radius:38px}
+body.tab .screen{border-radius:18px}
+body.tab #app{top:24px}
+body.tab .scr{padding-bottom:20px}
+body.tab .sbar{height:24px;padding:0 22px;font-size:13px}
+body.tab .homeind{bottom:7px;width:300px}
+body.tab .cam{display:block;position:absolute;width:8px;height:8px;border-radius:50%;background:#2E3238;left:50%;top:6px;margin-left:-4px}
+body.tab.land #dev{width:1220px;height:860px}
+body.tab.land .screen{width:1180px;height:820px}
+body.tab.port #dev{width:860px;height:1220px}
+body.tab.port .screen{width:820px;height:1180px}
 .mbtn{display:none;border:0;cursor:pointer}
 .mbk{display:none}
 #app.menu .side{transform:none}
@@ -292,7 +330,7 @@ button.nav{border:0;background:transparent;width:100%;text-align:left;cursor:poi
 
 @container app (max-width:1100px){
   .shell{grid-template-columns:1fr;padding:10px}.main{padding:0;border-radius:0}
-  .side{position:fixed;left:0;top:0;bottom:0;width:min(310px,86%);z-index:60;border-radius:0 24px 24px 0;transform:translateX(-105%);transition:transform .25s ease;overflow-y:auto;box-shadow:8px 0 30px rgba(0,0,0,.15)}
+  .side{position:fixed;left:0;top:0;bottom:0;height:auto;width:min(310px,86%);z-index:60;border-radius:0 24px 24px 0;transform:translateX(-105%);transition:transform .25s ease;overflow-y:auto;box-shadow:8px 0 30px rgba(0,0,0,.15)}
   .mbtn{display:grid}
   .kpis{grid-template-columns:1fr 1fr}.two,.tp{grid-template-columns:1fr}
   .chg .row{grid-template-columns:110px 1fr 1fr 100px}
@@ -335,7 +373,7 @@ button.nav{border:0;background:transparent;width:100%;text-align:left;cursor:poi
   <div class="ctl"><span>Линия сейчас</span><div id="scens"></div></div>
   <div class="right"><button class="dbtn" data-tourstart="1">Тур по экрану</button><button class="dbtn" data-help="1" data-tour="help">Пояснения</button></div>
 </div>
-<div id="app"></div>
+<div id="devbox"><div id="dev"><span class="cam"></span><div class="screen"><div class="sbar" id="sbar"></div><span class="island"></span><div id="app"></div><span class="homeind"></span></div></div></div>
 <div id="help"></div>
 
 <script>
@@ -366,15 +404,17 @@ function tplAt(m){return m<185?"12":"27"}
 
 var ROLES=[["op","Оператор","ОП","Оператор"],["foreman","Начальник участка","НУ","Начальник"],["boss","Директор / собственник","ДР","Директор"]];
 var SCENS=[["run","Работает"],["stop","Станок стоит"],["nolink","Нет связи"]];
-var SCREENS=[["big","Большой"],["small","Телефон"]];
+var SCREENS=[["phone","Телефон"],["tab","Планшет"],["desk","Десктоп"]];
 // shop structure for the sidebar: unit -> lines/machines; state uses ST codes, -1 = switched off. Only Cesis 2 opens.
 var UNITS=[
   {id:"weld",n:"Сварочный участок",items:[["Линия Цесис 2","cur"],["Линия Цесис 1",1],["Правка-отрезка СПО-1",3]]},
   {id:"bend",n:"Гибочный участок",items:[["Гибочный ГС-1",6],["Гибочный ГС-2",-1]]}
 ];
 var WORD={1:"",2:"стоп",3:"простой",4:"наладка",5:"перегрев",6:"авария",7:"авар. стоп",8:"простой",0:"нет данных","-1":"выключен"};
-var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="big",closedUnits={};
-try{screen=localStorage.getItem("cesis2-screen")||"big"}catch(x){}
+var role=(location.hash||"").slice(1),scen="run",tags={},openTag=null,evFilter="all",selSeg=null,screen="desk",closedUnits={};
+var tabRot="land";
+try{screen=localStorage.getItem("cesis2-screen")||"desk";tabRot=localStorage.getItem("cesis2-rot")||"land"}catch(x){}
+if(!SCREENS.some(function(x){return x[0]==screen}))screen=screen=="small"?"phone":"desk";
 if(!ROLES.some(function(r){return r[0]==role}))role="foreman";
 
 // ---- icons (simple strokes) ----
@@ -680,7 +720,7 @@ function helpHTML(){
   '<h3>Роли</h3><ul><li><b>Оператор</b> — у линии. Видит состояние издалека и одним касанием указывает причину остановки. Линию выбирает в меню, как и остальные роли; название линии повторяется в вопросе о причине, чтобы не перепутать.</li>'+
   '<li><b>Начальник участка</b> — что требует действия сейчас: остановки без причины, переналадки сверх нормы, журнал событий.</li>'+
   '<li><b>Директор / собственник</b> — итог смены, куда ушло время, выпуск по шаблонам.</li></ul>'+
-  '<p>Переключатель «Экран» показывает каждую роль на большом экране и на телефоне. На телефоне навигация по цеху открывается кнопкой ☰.</p>'+
+  '<p>Переключатель «Экран» показывает каждую роль на телефоне (iPhone, 393 × 852 pt), планшете (iPad Air 11″, 1180 × 820 pt, можно повернуть) и десктопе. Если устройство не помещается в окно, оно пропорционально уменьшается. На узком экране навигация по цеху открывается кнопкой ☰.</p>'+
   '<p>Переключатель «Линия сейчас» в верхней полосе показывает, как экран выглядит, когда линия стоит и когда пропала связь. Время обновления видно только при устаревших данных.</p>'+
   '<h3>Цвета состояний</h3><div class="lg">'+lg+'</div>'+
   '<h3>Метки</h3><ul><li><span class="src">ПЛК</span> — состояние и причину определил контроллер линии автоматически.</li>'+
@@ -699,7 +739,7 @@ function helpHTML(){
 // ---- guided tour: dim the page, highlight one block, explain it ----
 var TOURS={
   op:[
-    ["demo","Это прототип на демо-данных","Здесь переключаются роль, размер экрана (большой или телефон) и состояние линии. Цифры вымышлены."],
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль, устройство (телефон, планшет, десктоп) и состояние линии. Цифры вымышлены."],
     ["side","Выбор линии","Слева — участки, линии и станки со статусами. Выделенная строка — линия, с которой вы работаете. На телефоне меню открывается кнопкой ☰."],
     ["status","Состояние линии","Видно издалека: цвет и одно слово. Ниже — сколько длится и какой шаблон в работе."],
     ["reasons","Линия встала — укажите причину","Одно касание, без клавиатуры. Здесь только то, чего не видит ПЛК: аварии, паузы и переналадку линия определяет сама.",function(){scen="stop";render()}],
@@ -709,7 +749,7 @@ var TOURS={
     ["help","Пояснения","Что значат цвета и метки, что вымышлено и какие вопросы открыты. Тур можно пройти заново кнопкой «Тур по экрану»."]
   ],
   foreman:[
-    ["demo","Это прототип на демо-данных","Здесь переключаются роль, размер экрана (большой или телефон) и состояние линии. Цифры вымышлены."],
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль, устройство (телефон, планшет, десктоп) и состояние линии. Цифры вымышлены."],
     ["side","Навигация по цеху","Участки → линии и станки. У каждого агрегата точка статуса, проблемные подписаны словом. Чёрная строка — где вы сейчас. На телефоне меню открывается кнопкой ☰."],
     ["now","Что требует действия","Состояние линии и то, что нужно сделать: указать причины остановок, разобрать переналадку сверх нормы."],
     ["timeline","Лента смены","Пункт 1 ТЗ: работа, стоп, пауза, аварии по времени. Нажмите на участок — покажет время и причину."],
@@ -720,7 +760,7 @@ var TOURS={
     ["help","Пояснения","Что значат цвета и метки, что вымышлено и какие вопросы открыты. Тур можно пройти заново кнопкой «Тур по экрану»."]
   ],
   boss:[
-    ["demo","Это прототип на демо-данных","Здесь переключаются роль, размер экрана (большой или телефон) и состояние линии. Цифры вымышлены."],
+    ["demo","Это прототип на демо-данных","Здесь переключаются роль, устройство (телефон, планшет, десктоп) и состояние линии. Цифры вымышлены."],
     ["side","Навигация по цеху","Участки → линии и станки. У каждого агрегата точка статуса, проблемные подписаны словом. Чёрная строка — где вы сейчас. На телефоне меню открывается кнопкой ☰."],
     ["verdict","Итог смены одной строкой","Сколько сделано против графика, прогноз к концу смены и главные потери."],
     ["timeline","Лента смены","Работа, стоп, пауза, аварии по времени. Нажмите на участок — покажет время и причину."],
@@ -733,7 +773,8 @@ var TOURS={
 var tour=null;
 function tourEl(key){   // several elements may carry one key (sidebar on big screen, menu button on phone): take the visible one
   var a=document.querySelectorAll('[data-tour="'+key+'"]');
-  for(var i=0;i<a.length;i++){var r=a[i].getBoundingClientRect();if(r.width>0&&r.right>0)return a[i]}
+  var mb=document.querySelector(".mbtn"),drawer=mb&&getComputedStyle(mb).display!="none";   // sidebar hidden behind the menu button
+  for(var i=0;i<a.length;i++){if(drawer&&a[i].classList.contains("side"))continue;var r=a[i].getBoundingClientRect();if(r.width>0&&r.right>0)return a[i]}
   return null;
 }
 function startTour(){
@@ -777,9 +818,10 @@ function render(){
   M_=model();
   var keep=document.querySelector(".scr"),top=keep?keep.scrollTop:0;
   $("app").innerHTML='<div class="scr">'+(role=="op"?viewOperator(M_):role=="foreman"?viewForeman(M_):viewBoss(M_))+'</div><div class="mbk" data-menu="close"></div>';
-  if(screen=="small")document.querySelector(".scr").scrollTop=top;
-  document.body.classList.toggle("small",screen=="small"&&innerWidth>=700);
-  $("screens").innerHTML=SCREENS.map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("");
+  if(screen!="desk")document.querySelector(".scr").scrollTop=top;
+  $("screens").innerHTML=SCREENS.map(function(r){return '<button data-screen="'+r[0]+'" class="'+(r[0]==screen?"on":"")+'">'+r[1]+'</button>'}).join("")+
+    (screen=="tab"?'<button data-rotate="1" title="Повернуть планшет">↻ '+(tabRot=="land"?"Вертикально":"Горизонтально")+'</button>':'');
+  frame();
   $("roles").innerHTML=ROLES.map(function(r){return '<button data-role="'+r[0]+'" class="'+(r[0]==role?"on":"")+'"><span class="lgl">'+r[1]+'</span><span class="shl">'+r[3]+'</span></button>'}).join("");
   $("scens").innerHTML=SCENS.map(function(r){return '<button data-scen="'+r[0]+'" class="'+(r[0]==scen?"on":"")+'">'+r[1]+'</button>'}).join("");
 }
@@ -795,6 +837,7 @@ document.addEventListener("click",function(e){
   if(d.tend){endTour();return}
   if(d.tourstart){startTour();return}
   if(d.help){$("help").classList.contains("open")?closeHelp():openHelp();return}
+  if(d.rotate){tabRot=tabRot=="land"?"port":"land";try{localStorage.setItem("cesis2-rot",tabRot)}catch(x){}var a2=$("app");a2.classList.add("noanim");render();setTimeout(function(){a2.classList.remove("noanim")},60);return}
   if(d.screen){screen=d.screen;try{localStorage.setItem("cesis2-screen",screen)}catch(x){}var ap=$("app");ap.classList.remove("menu");ap.classList.add("noanim");render();setTimeout(function(){ap.classList.remove("noanim")},60);window.scrollTo(0,0);return}
   if(d.role){role=d.role;$("app").classList.remove("menu");try{history.replaceState(null,"","#"+role)}catch(x){}openTag=null;selSeg=null}
   else if(d.scen){scen=d.scen;openTag=null;selSeg=null}
@@ -806,11 +849,27 @@ document.addEventListener("click",function(e){
   render();
   if(d.jump){var t=document.querySelector(".tabs");if(t)t.scrollIntoView({behavior:"smooth",block:"center"})}
 });
+// device frame: real point sizes, scaled down only to fit the browser window
+var SIG='<svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>';
+var WIFI='<svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.5 6.9a6.4 6.4 0 0 1 9 0l-1.4 1.4a4.4 4.4 0 0 0-6.2 0zM1.3 4.7a9.5 9.5 0 0 1 13.4 0l-1.4 1.4a7.5 7.5 0 0 0-10.6 0z" fill="currentColor"/></svg>';
+var BATT='<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="17" height="9" rx="2" fill="currentColor"/><rect x="24.5" y="4.3" width="1.6" height="4.4" rx=".8" fill="currentColor" opacity=".4"/></svg>';
+function frame(){
+  var dev=screen!="desk"&&innerWidth>=700,b=document.body;
+  b.classList.toggle("dev",dev);b.classList.toggle("phone",dev&&screen=="phone");b.classList.toggle("tab",dev&&screen=="tab");
+  b.classList.toggle("land",tabRot=="land");b.classList.toggle("port",tabRot=="port");
+  var box=$("devbox"),d=$("dev");
+  if(!dev){box.style.width=box.style.height="";d.style.transform="";$("sbar").innerHTML="";return}
+  $("sbar").innerHTML=screen=="phone"?'<span>19:40</span><span class="ics">'+SIG+WIFI+BATT+'</span>'
+                                     :'<span>19:40&nbsp;&nbsp;Ср 28 окт.</span><span class="ics">'+WIFI+'<span>87%</span>'+BATT+'</span>';
+  var W=d.offsetWidth,H=d.offsetHeight,bar=document.querySelector(".demo-bar").offsetHeight;
+  var k=Math.min(1,(innerWidth-40)/W,(innerHeight-bar-52)/H);
+  d.style.transform="scale("+k+")";box.style.width=W*k+"px";box.style.height=H*k+"px";
+}
+addEventListener("resize",function(){frame();placeTour()});
 document.addEventListener("keydown",function(e){
   if(tour){if(e.key=="Escape")endTour();else if(e.key=="ArrowRight")showStep(tour.i+1);else if(e.key=="ArrowLeft")showStep(tour.i-1)}
   else if(e.key=="Escape")closeHelp();
 });
-addEventListener("resize",placeTour);
 addEventListener("scroll",placeTour,{passive:true,capture:true});
 var toastT;
 function toast(t){var el=$("toast");if(!el){el=document.createElement("div");el.id="toast";document.body.appendChild(el)}el.textContent=t;el.style.display="block";clearTimeout(toastT);toastT=setTimeout(function(){el.style.display="none"},2200)}
