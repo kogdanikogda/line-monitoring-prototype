@@ -652,7 +652,9 @@ function lossesLine(M){
 }
 // director: the result of the shift in one line
 function verdict(M){
-  var head="К 19:40 сделано "+M.done+" карт при графике "+M.planNow+(M.gap>0?" (−"+M.gap+")":"")+". Прогноз к концу смены ≈ "+M.forecast+" из "+PLAN+".";
+  // unplanned stops and changeover overrun, priced at the rate of the template that was running
+  var lost=Math.round(M.list.reduce(function(a,i){return a+i.lostCards},0));
+  var head="К 19:40 сделано "+M.done+" карт при графике "+M.planNow+(M.gap>0?" (−"+M.gap+")":"")+". Из‑за простоев не сделано ≈ "+lost+" "+plural(lost,"карта","карты","карт")+". Прогноз к концу смены ≈ "+M.forecast+" из "+PLAN+".";
   return '<section class="card verdict mb" data-tour="verdict"><div class="vic neu">'+ic("target")+'</div><div>'+
     '<div class="head">'+head+'</div><div class="why">'+lossesLine(M)+' План'+TBD+'</div></div></section>';
 }
